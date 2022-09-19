@@ -5,3 +5,8 @@ project(qp-OpenCL
         LANGUAGES CXX)
 
 add_subdirectory(src)
+
+enable_testing()
+add_subdirectory(third_party/googletest)
+
+add_subdirectory(test)

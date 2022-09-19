@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <mutex>
+#include <stdexcept>
 #include "common/Khronos.hpp"
 #include "common/Object.hpp"
 

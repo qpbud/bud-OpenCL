@@ -10,10 +10,12 @@ void Platform::init() {
 }
 
 cl_uint Platform::count() {
+    std::call_once(s_initFlag, &Platform::init);
     return static_cast<cl_uint>(s_platforms.size());
 }
 
 Platform& Platform::get(cl_uint index) {
+    std::call_once(s_initFlag, &Platform::init);
     return s_platforms[index];
 }
 
