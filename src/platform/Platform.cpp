@@ -1,3 +1,5 @@
+#include <cstring>
+#include "common/Except.hpp"
 #include "platform/Platform.hpp"
 
 namespace qp::cl {
@@ -19,6 +21,78 @@ Platform& Platform::get(cl_uint index) {
     return s_platforms[index];
 }
 
-Platform::Platform() {}
+Platform::Platform()
+    : Object<_cl_platform_id>()
+    , m_profile("EMBEDDED_PROFILE")
+    , m_version("OpenCL 3.0")
+    , m_numericVersion(CL_MAKE_VERSION_KHR(3, 0, 0))
+    , m_name("QP")
+    , m_vendor("BUD")
+    , m_extensions("")
+    , m_extensionsWithVersion()
+    , m_hostTimerResolution(0) {
+}
+
+size_t Platform::getInfoSize(cl_platform_info info) const {
+    switch (info) {
+        case CL_PLATFORM_PROFILE:
+            return m_profile.size() + 1;
+        case CL_PLATFORM_VERSION:
+            return m_version.size() + 1;
+        case CL_PLATFORM_NUMERIC_VERSION:
+            return sizeof(cl_version);
+        case CL_PLATFORM_NAME:
+            return m_name.size() + 1;
+        case CL_PLATFORM_VENDOR:
+            return m_vendor.size() + 1;
+        case CL_PLATFORM_EXTENSIONS:
+            return m_extensions.size() + 1;
+        case CL_PLATFORM_EXTENSIONS_WITH_VERSION:
+            return m_extensionsWithVersion.size() * sizeof(cl_name_version);
+        case CL_PLATFORM_HOST_TIMER_RESOLUTION:
+            return sizeof(cl_ulong);
+        default:
+            throw Except(CL_INVALID_VALUE);
+    }
+}
+
+void Platform::getInfo(cl_platform_info info, size_t size, void* value) {
+    if (size < getInfoSize(info)) {
+        throw Except(CL_INVALID_VALUE);
+    }
+
+    switch (info) {
+        case CL_PLATFORM_PROFILE:
+            m_profile.copy(static_cast<char*>(value), m_profile.size());
+            static_cast<char*>(value)[m_profile.size()] = '\0';
+            break;
+        case CL_PLATFORM_VERSION:
+            m_version.copy(static_cast<char*>(value), m_version.size());
+            static_cast<char*>(value)[m_version.size()] = '\0';
+            break;
+        case CL_PLATFORM_NUMERIC_VERSION:
+            *static_cast<cl_version*>(value) = m_numericVersion;
+            break;
+        case CL_PLATFORM_NAME:
+            m_name.copy(static_cast<char*>(value), m_name.size());
+            static_cast<char*>(value)[m_name.size()] = '\0';
+            break;
+        case CL_PLATFORM_VENDOR:
+            m_vendor.copy(static_cast<char*>(value), m_vendor.size());
+            static_cast<char*>(value)[m_vendor.size()] = '\0';
+            break;
+        case CL_PLATFORM_EXTENSIONS:
+            m_extensions.copy(static_cast<char*>(value), m_extensions.size());
+            static_cast<char*>(value)[m_extensions.size()] = '\0';
+            break;
+        case CL_PLATFORM_EXTENSIONS_WITH_VERSION:
+            std::memcpy(value, m_extensionsWithVersion.data(), m_extensionsWithVersion.size() * sizeof(cl_name_version));
+        case CL_PLATFORM_HOST_TIMER_RESOLUTION:
+            *static_cast<cl_ulong*>(value) = m_hostTimerResolution;
+            break;
+        default:
+            throw Except(CL_INVALID_VALUE);
+    }
+}
 
 }
