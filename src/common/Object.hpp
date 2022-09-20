@@ -2,4 +2,35 @@
 
 #include "common/Khronos.hpp"
 
-struct _cl_platform_id {};
+namespace qp::cl {
+
+enum class ObjectMagic {
+    platform = 0x4,
+    invalid = 0xffff
+};
+
+template<ObjectMagic m>
+struct ObjectBase {
+    cl_icd_dispatch* icd = nullptr;
+    ObjectMagic magic = m;
+
+    ~ObjectBase() {
+        magic = ObjectMagic::invalid;
+    }
+
+    bool isValid() const noexcept {
+        return magic == m;
+    }
+};
+
+}
+
+struct _cl_platform_id : public qp::cl::ObjectBase<qp::cl::ObjectMagic::platform> {};
+
+namespace qp::cl {
+
+template<typename T> class Object;
+
+template<> class Object<_cl_platform_id> : public _cl_platform_id {};
+
+}
