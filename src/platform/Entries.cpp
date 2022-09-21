@@ -20,7 +20,7 @@ clGetPlatformIDs(cl_uint num_entries,
             *num_platforms = qp::cl::Platform::count();
         }
 
-        if (num_entries > 0 && platforms) {
+        if (platforms) {
             for (cl_uint i = 0; i < num_entries; i++) {
                 platforms[i] = &qp::cl::Platform::get(i);
             }
@@ -45,8 +45,9 @@ clGetPlatformInfo(cl_platform_id platform,
         return CL_INVALID_PLATFORM;
     }
 
-    auto& platformInternal = static_cast<qp::cl::Platform&>(*platform);
     try {
+        auto& platformInternal = static_cast<qp::cl::Platform&>(*platform);
+
         if (param_value) {
             platformInternal.getInfo(param_name, param_value_size, param_value);
         }

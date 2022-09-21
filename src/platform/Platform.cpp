@@ -7,8 +7,28 @@ namespace qp::cl {
 std::vector<Platform> Platform::s_platforms{};
 std::once_flag Platform::s_initFlag{};
 
+template<>
+Platform::Platform(QP)
+    : Object<_cl_platform_id>()
+    , m_profile("EMBEDDED_PROFILE")
+    , m_version("OpenCL 3.0")
+    , m_numericVersion(CL_MAKE_VERSION_KHR(3, 0, 0))
+    , m_name("QP")
+    , m_vendor("BUD")
+    , m_extensions("")
+    , m_extensionsWithVersion()
+    , m_hostTimerResolution(0)
+    , m_devices() {
+}
+
+template<> 
+void Platform::createDevices<Platform::QP>() {
+    m_devices.emplace_back(Device::RegisteredDevices::vulkan);
+}
+
 void Platform::init() {
-    s_platforms.emplace_back();
+    s_platforms.emplace_back(QP());
+    s_platforms.back().createDevices<QP>();
 }
 
 cl_uint Platform::count() {
@@ -19,18 +39,6 @@ cl_uint Platform::count() {
 Platform& Platform::get(cl_uint index) {
     std::call_once(s_initFlag, &Platform::init);
     return s_platforms[index];
-}
-
-Platform::Platform()
-    : Object<_cl_platform_id>()
-    , m_profile("EMBEDDED_PROFILE")
-    , m_version("OpenCL 3.0")
-    , m_numericVersion(CL_MAKE_VERSION_KHR(3, 0, 0))
-    , m_name("QP")
-    , m_vendor("BUD")
-    , m_extensions("")
-    , m_extensionsWithVersion()
-    , m_hostTimerResolution(0) {
 }
 
 size_t Platform::getInfoSize(cl_platform_info info) const {
@@ -56,7 +64,7 @@ size_t Platform::getInfoSize(cl_platform_info info) const {
     }
 }
 
-void Platform::getInfo(cl_platform_info info, size_t size, void* value) {
+void Platform::getInfo(cl_platform_info info, size_t size, void* value) const {
     if (size < getInfoSize(info)) {
         throw Except(CL_INVALID_VALUE);
     }
@@ -93,6 +101,14 @@ void Platform::getInfo(cl_platform_info info, size_t size, void* value) {
         default:
             throw Except(CL_INVALID_VALUE);
     }
+}
+
+cl_uint Platform::getDeviceCount() const {
+    return static_cast<cl_uint>(m_devices.size());
+}
+
+Device& Platform::getDevice(cl_uint index) {
+    return m_devices[index];
 }
 
 }
