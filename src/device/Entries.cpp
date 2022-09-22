@@ -63,3 +63,32 @@ clGetDeviceIDs(cl_platform_id platform,
 
     return CL_SUCCESS;
 }
+
+CL_API_ENTRY cl_int CL_API_CALL
+clGetDeviceInfo(cl_device_id device,
+                cl_device_info param_name,
+                size_t param_value_size,
+                void* param_value,
+                size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
+    if (!device || !device->isValid()) {
+        return CL_INVALID_DEVICE;
+    }
+
+    try {
+        auto& deviceInternal = static_cast<qp::cl::Device&>(*device);
+
+        if (param_value) {
+            deviceInternal.getInfo(param_name, param_value_size, param_value);
+        }
+        if (param_value_size_ret) {
+            *param_value_size_ret = deviceInternal.getInfoSize(param_name);
+        }
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}

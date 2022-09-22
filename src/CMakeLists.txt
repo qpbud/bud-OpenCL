@@ -3,7 +3,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(PLATFORM_SOURCE platform/Entries.cpp
                     platform/Platform.cpp)
 set(DEVICE_SOURCE device/Entries.cpp
-                  device/Device.cpp)
+                  device/Device.cpp
+                  device/backend/vulkan/Device.cpp)
 
 add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
                              ${DEVICE_SOURCE})
