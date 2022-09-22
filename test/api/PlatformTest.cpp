@@ -2,7 +2,7 @@
 #include <CL/cl.h>
 #include <gtest/gtest.h>
 
-namespace qp::tst {
+namespace qp::cl::tst {
 
 TEST(platform, clGetPlatformIDs0) {
     cl_platform_id platform;

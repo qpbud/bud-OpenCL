@@ -23,7 +23,7 @@ Platform::Platform(QP)
 
 template<> 
 void Platform::createDevices<Platform::QP>() {
-    m_devices.emplace_back(Device::RegisteredDevices::vulkan);
+    m_devices.emplace_back(Device::Vulkan());
 }
 
 void Platform::init() {
