@@ -7,15 +7,15 @@ CL_API_ENTRY cl_int CL_API_CALL
 clGetPlatformIDs(cl_uint num_entries,
                  cl_platform_id* platforms,
                  cl_uint* num_platforms) CL_API_SUFFIX__VERSION_1_0 {
-    if (num_entries == 0 && platforms) {
-        return CL_INVALID_VALUE;
-    }
-
-    if (!platforms && !num_platforms) {
-        return CL_INVALID_VALUE;
-    }
-
     try {
+        if (num_entries == 0 && platforms) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        if (!platforms && !num_platforms) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
         if (num_platforms) {
             *num_platforms = qp::cl::Platform::count();
         }
@@ -41,11 +41,11 @@ clGetPlatformInfo(cl_platform_id platform,
                   size_t param_value_size,
                   void* param_value,
                   size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-    if (!platform || !platform->isValid()) {
-        return CL_INVALID_PLATFORM;
-    }
-
     try {
+        if (!platform || !platform->isValid()) {
+            throw qp::cl::Except(CL_INVALID_PLATFORM);
+        }
+
         auto& platformInternal = static_cast<qp::cl::Platform&>(*platform);
 
         if (param_value) {

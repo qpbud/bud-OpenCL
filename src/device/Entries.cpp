@@ -10,28 +10,28 @@ clGetDeviceIDs(cl_platform_id platform,
                cl_uint num_entries,
                cl_device_id* devices,
                cl_uint* num_devices) CL_API_SUFFIX__VERSION_1_0 {
-    if (!platform || !platform->isValid()) {
-        return CL_INVALID_PLATFORM;
-    }
-
-    if (device_type != CL_DEVICE_TYPE_CPU &&
-        device_type != CL_DEVICE_TYPE_GPU &&
-        device_type != CL_DEVICE_TYPE_ACCELERATOR &&
-        device_type != CL_DEVICE_TYPE_CUSTOM &&
-        device_type != CL_DEVICE_TYPE_DEFAULT &&
-        device_type != CL_DEVICE_TYPE_ALL) {
-        return CL_INVALID_DEVICE_TYPE;
-    }
-
-    if (num_entries == 0 && devices) {
-        return CL_INVALID_VALUE;
-    }
-
-    if (!devices && !num_devices) {
-        return CL_INVALID_VALUE;
-    }
-
     try {
+        if (!platform || !platform->isValid()) {
+            throw qp::cl::Except(CL_INVALID_PLATFORM);
+        }
+
+        if (device_type != CL_DEVICE_TYPE_CPU &&
+            device_type != CL_DEVICE_TYPE_GPU &&
+            device_type != CL_DEVICE_TYPE_ACCELERATOR &&
+            device_type != CL_DEVICE_TYPE_CUSTOM &&
+            device_type != CL_DEVICE_TYPE_DEFAULT &&
+            device_type != CL_DEVICE_TYPE_ALL) {
+            throw qp::cl::Except(CL_INVALID_DEVICE_TYPE);
+        }
+
+        if (num_entries == 0 && devices) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        if (!devices && !num_devices) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
         auto& platformInternal = static_cast<qp::cl::Platform&>(*platform);
 
         cl_uint count = 0;
@@ -70,11 +70,11 @@ clGetDeviceInfo(cl_device_id device,
                 size_t param_value_size,
                 void* param_value,
                 size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-    if (!device || !device->isValid()) {
-        return CL_INVALID_DEVICE;
-    }
-
     try {
+        if (!device || !device->isValid()) {
+            throw qp::cl::Except(CL_INVALID_DEVICE);
+        }
+
         auto& deviceInternal = static_cast<qp::cl::Device&>(*device);
 
         if (param_value) {
