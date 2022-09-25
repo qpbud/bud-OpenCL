@@ -5,9 +5,12 @@ set(PLATFORM_SOURCE platform/Entries.cpp
 set(DEVICE_SOURCE device/Entries.cpp
                   device/Device.cpp
                   device/backend/vulkan/Device.cpp)
+set(CONTEXT_SOURCE context/Entries.cpp
+                   context/Context.cpp)
 
 add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
-                             ${DEVICE_SOURCE})
+                             ${DEVICE_SOURCE}
+                             ${CONTEXT_SOURCE})
 target_include_directories(OpenCL_QP PRIVATE ${CMAKE_SOURCE_DIR}/third_party/OpenCL-Headers
                                              ${CMAKE_SOURCE_DIR}/src)
 target_compile_definitions(OpenCL_QP PRIVATE CL_TARGET_OPENCL_VERSION=300)

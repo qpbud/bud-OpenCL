@@ -1,12 +1,20 @@
 #pragma once
 
+#include <memory>
 #include "common/Khronos.hpp"
 #include "common/Except.hpp"
+#include "device/detail/Context.hpp"
 namespace qp::cl::detail {
 
 class Device {
     cl_device_type m_type;
+
+    virtual std::unique_ptr<Context> createContext() = 0;
 public:
+    template<typename Detail> struct Creator {
+        template<typename ... Args> std::unique_ptr<Detail> operator()(Device& device, Args&&... args);
+    };
+
     Device(cl_device_type type)
         : m_type(type) {
     }
@@ -40,5 +48,16 @@ public:
         }
     }
 };
+
+#define CREATE_FUNCTION(Detail) create##Detail
+
+#define GENERATE_CREATOR(Detail) \
+    template<> \
+    template<typename ... Args> \
+    std::unique_ptr<Detail> Device::Creator<Detail>::operator()(Device& device, Args&&... args) { \
+        return device.CREATE_FUNCTION(Detail)(); \
+    }
+
+GENERATE_CREATOR(Context)
 
 }

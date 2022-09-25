@@ -17,6 +17,7 @@ public:
     cl_device_type type() const;
     size_t getInfoSize(cl_device_info info) const;
     void getInfo(cl_device_info info, size_t size, void* value) const;
+    operator detail::Device&();
 };
 
 }

@@ -23,4 +23,6 @@ void Device::getInfo(cl_device_info info, size_t size, void* value) const {
     m_detail->getInfo(info, size, value);
 }
 
+Device::operator detail::Device&() { return *m_detail; }
+
 }
