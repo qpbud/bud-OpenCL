@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/smart_ptr/intrusive_ref_counter.hpp>
 #include "common/Khronos.hpp"
 
 namespace qp::cl {
@@ -37,6 +38,6 @@ template<typename T> class Object;
 
 template<> class Object<_cl_platform_id> : public _cl_platform_id {};
 template<> class Object<_cl_device_id> : public _cl_device_id {};
-template<> class Object<_cl_context> : public _cl_context {};
+template<> class Object<_cl_context> : public _cl_context, public boost::intrusive_ref_counter<Object<_cl_context>> {};
 
 }
