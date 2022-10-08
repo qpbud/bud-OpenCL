@@ -162,7 +162,7 @@ clRetainContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
         }
 
         auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        // TODO: add code here
+        intrusive_ptr_add_ref(&contextInternal);
     } catch (const std::exception& e) {
         if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
             return except->err();
@@ -175,6 +175,19 @@ clRetainContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
 
 CL_API_ENTRY cl_int CL_API_CALL
 clReleaseContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
-    // TODO: add code here
+    try {
+        if (!context || !context->isValid()) {
+            throw qp::cl::Except(CL_INVALID_CONTEXT);
+        }
+
+        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+        intrusive_ptr_release(&contextInternal);
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
     return CL_SUCCESS;
 }
