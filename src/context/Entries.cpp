@@ -153,3 +153,28 @@ clCreateContextFromType(const cl_context_properties* properties,
     }
     return context;
 }
+
+CL_API_ENTRY cl_int CL_API_CALL
+clRetainContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!context || !context->isValid()) {
+            throw qp::cl::Except(CL_INVALID_CONTEXT);
+        }
+
+        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+        // TODO: add code here
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clReleaseContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
+    // TODO: add code here
+    return CL_SUCCESS;
+}
