@@ -16,7 +16,7 @@ public:
     H1D1(Device& device, Args&&... args)
         : m_device(device)
         , m_detail() {
-        m_detail = detail::Device&(m_device).create(std::forward<Args>(args)...);
+        m_detail = detail::Device::Creator<Detail>()(m_device, std::forward<Args>(args)...);
     }
 
     Device& getDevice() { return m_device; }
