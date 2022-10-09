@@ -162,7 +162,7 @@ clRetainContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
         }
 
         auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        intrusive_ptr_add_ref(&contextInternal);
+        contextInternal.retain();
     } catch (const std::exception& e) {
         if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
             return except->err();
@@ -181,7 +181,7 @@ clReleaseContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
         }
 
         auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        intrusive_ptr_release(&contextInternal);
+        contextInternal.release();
     } catch (const std::exception& e) {
         if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
             return except->err();

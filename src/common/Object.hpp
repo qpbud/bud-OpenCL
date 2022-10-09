@@ -1,5 +1,6 @@
 #pragma once
 
+#include <type_traits>
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 #include "common/Khronos.hpp"
 
@@ -34,10 +35,25 @@ struct _cl_context : public qp::cl::ObjectBase<qp::cl::ObjectMagic::context> {};
 
 namespace qp::cl {
 
-template<typename T> class Object;
+template<typename T, typename Enable = void> class Object;
 
-template<> class Object<_cl_platform_id> : public _cl_platform_id {};
-template<> class Object<_cl_device_id> : public _cl_device_id {};
-template<> class Object<_cl_context> : public _cl_context, public boost::intrusive_ref_counter<Object<_cl_context>> {};
+template<typename T>
+class Object<T,
+             std::enable_if_t<std::is_same_v<T, _cl_platform_id> ||
+                              std::is_same_v<T, _cl_device_id>>> : public T {};
+
+template<typename T>
+class Object<T, std::enable_if_t<std::is_same_v<T, _cl_context>>> : public T, public boost::intrusive_ref_counter<Object<T>> {
+public:
+    virtual ~Object() = default;
+
+    void retain() {
+        boost::sp_adl_block::intrusive_ptr_add_ref(this);
+    }
+
+    void release() {
+        boost::sp_adl_block::intrusive_ptr_release(this);
+    }
+};
 
 }
