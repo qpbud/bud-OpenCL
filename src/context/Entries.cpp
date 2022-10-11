@@ -19,25 +19,27 @@ clCreateContext(const cl_context_properties* properties,
     try {
         size_t propLen = 0;
         std::vector<cl_context_properties> propertiesVec;
-        while (properties[propLen] != 0) {
-            switch (properties[propLen]) {
-                case CL_CONTEXT_PLATFORM: {
-                    auto platform = reinterpret_cast<cl_platform_id>(properties[propLen + 1]);
-                    if (!platform || !platform->isValid()) {
-                        throw qp::cl::Except(CL_INVALID_PLATFORM);
+        if (properties) {
+            while (properties && properties[propLen] != 0) {
+                switch (properties[propLen]) {
+                    case CL_CONTEXT_PLATFORM: {
+                        auto platform = reinterpret_cast<cl_platform_id>(properties[propLen + 1]);
+                        if (!platform || !platform->isValid()) {
+                            throw qp::cl::Except(CL_INVALID_PLATFORM);
+                        }
+                        break;
                     }
-                    break;
+                    case CL_CONTEXT_INTEROP_USER_SYNC:
+                        [[fallthrough]];
+                    default:
+                        throw qp::cl::Except(CL_INVALID_PROPERTY);
                 }
-                case CL_CONTEXT_INTEROP_USER_SYNC:
-                    [[fallthrough]];
-                default:
-                    throw qp::cl::Except(CL_INVALID_PROPERTY);
+                propertiesVec.push_back(properties[propLen]);
+                propertiesVec.push_back(properties[propLen + 1]);
+                propLen += 2;
             }
-            propertiesVec.push_back(properties[propLen]);
-            propertiesVec.push_back(properties[propLen + 1]);
-            propLen += 2;
+            propertiesVec.push_back(0);
         }
-        propertiesVec.push_back(0);
 
         if (num_devices == 0 || !devices) {
             throw qp::cl::Except(CL_INVALID_VALUE);
@@ -55,7 +57,10 @@ clCreateContext(const cl_context_properties* properties,
             devicesVec[i] = devices[i];
         }
 
-        context = &qp::cl::Context::create(std::move(propertiesVec), std::move(devicesVec), pfn_notify, user_data);
+        context = &qp::cl::Context::create(std::move(propertiesVec), std::move(devicesVec),
+                                           [pfn_notify, user_data](const char* errInfo, const void* privateInfo, size_t privateInfoSize) {
+                                               pfn_notify(errInfo, privateInfo, privateInfoSize, user_data);
+                                           });
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -87,26 +92,28 @@ clCreateContextFromType(const cl_context_properties* properties,
         qp::cl::Platform* platformInternal = &qp::cl::Platform::get(0);
         size_t propLen = 0;
         std::vector<cl_context_properties> propertiesVec;
-        while (properties[propLen] != 0) {
-            switch (properties[propLen]) {
-                case CL_CONTEXT_PLATFORM: {
-                    auto platform = reinterpret_cast<cl_platform_id>(properties[propLen + 1]);
-                    if (!platform || !platform->isValid()) {
-                        throw qp::cl::Except(CL_INVALID_PLATFORM);
+        if (properties) {
+            while (properties && properties[propLen] != 0) {
+                switch (properties[propLen]) {
+                    case CL_CONTEXT_PLATFORM: {
+                        auto platform = reinterpret_cast<cl_platform_id>(properties[propLen + 1]);
+                        if (!platform || !platform->isValid()) {
+                            throw qp::cl::Except(CL_INVALID_PLATFORM);
+                        }
+                        platformInternal = static_cast<qp::cl::Platform*>(platform);
+                        break;
                     }
-                    platformInternal = static_cast<qp::cl::Platform*>(platform);
-                    break;
+                    case CL_CONTEXT_INTEROP_USER_SYNC:
+                        [[fallthrough]];
+                    default:
+                        throw qp::cl::Except(CL_INVALID_PROPERTY);
                 }
-                case CL_CONTEXT_INTEROP_USER_SYNC:
-                    [[fallthrough]];
-                default:
-                    throw qp::cl::Except(CL_INVALID_PROPERTY);
+                propertiesVec.push_back(properties[propLen]);
+                propertiesVec.push_back(properties[propLen + 1]);
+                propLen += 2;
             }
-            propertiesVec.push_back(properties[propLen]);
-            propertiesVec.push_back(properties[propLen + 1]);
-            propLen += 2;
+            propertiesVec.push_back(0);
         }
-        propertiesVec.push_back(0);
 
         if (!pfn_notify && user_data) {
             throw qp::cl::Except(CL_INVALID_VALUE);
@@ -136,7 +143,10 @@ clCreateContextFromType(const cl_context_properties* properties,
             throw qp::cl::Except(CL_DEVICE_NOT_FOUND);
         }
 
-        context = &qp::cl::Context::create(std::move(propertiesVec), std::move(devicesVec), pfn_notify, user_data);
+        context = &qp::cl::Context::create(std::move(propertiesVec), std::move(devicesVec),
+                                           [pfn_notify, user_data](const char* errInfo, const void* privateInfo, size_t privateInfoSize) {
+                                               pfn_notify(errInfo, privateInfo, privateInfoSize, user_data);
+                                           });
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -182,6 +192,61 @@ clReleaseContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
 
         auto& contextInternal = static_cast<qp::cl::Context&>(*context);
         contextInternal.release();
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clGetContextInfo(cl_context context,
+                 cl_context_info param_name,
+                 size_t param_value_size,
+                 void* param_value,
+                 size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!context || !context->isValid()) {
+            throw qp::cl::Except(CL_INVALID_CONTEXT);
+        }
+
+        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+
+        if (param_value) {
+            contextInternal.getInfo(param_name, param_value_size, param_value);
+        }
+        if (param_value_size_ret) {
+            *param_value_size_ret = contextInternal.getInfoSize(param_name);
+        }
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clSetContextDestructorCallback(cl_context context,
+                               void (CL_CALLBACK* pfn_notify)(cl_context context,
+                                                              void* user_data),
+                               void* user_data) CL_API_SUFFIX__VERSION_3_0 {
+    try {
+        if (!context || !context->isValid()) {
+            throw qp::cl::Except(CL_INVALID_CONTEXT);
+        }
+
+        if (!pfn_notify) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+        contextInternal.setDestructorCallback([pfn_notify, context, user_data] { pfn_notify(context, user_data); });
     } catch (const std::exception& e) {
         if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
             return except->err();
