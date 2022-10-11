@@ -45,6 +45,12 @@ class Object<T,
 template<typename T>
 class Object<T, std::enable_if_t<std::is_same_v<T, _cl_context>>> : public T, public boost::intrusive_ref_counter<Object<T>> {
 public:
+    Object()
+        : T()
+        , boost::intrusive_ref_counter<Object<T>>() {
+        boost::sp_adl_block::intrusive_ptr_add_ref(this);
+    }
+
     virtual ~Object() = default;
 
     void retain() {
@@ -53,6 +59,10 @@ public:
 
     void release() {
         boost::sp_adl_block::intrusive_ptr_release(this);
+    }
+
+    cl_uint count() const {
+        return static_cast<cl_uint>(use_count());
     }
 };
 

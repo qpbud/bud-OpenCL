@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.12)
+if(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+    cmake_minimum_required(VERSION 3.21)
+elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
+    cmake_minimum_required(VERSION 3.12)
+endif()
 
 project(qp-OpenCL
         VERSION 0.1

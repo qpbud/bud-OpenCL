@@ -1,7 +1,8 @@
 set(CMAKE_CXX_STANDARD 17)
 
 set(API_TEST_SOURCE PlatformTest.cpp
-                    DeviceTest.cpp)
+                    DeviceTest.cpp
+                    Context.cpp)
 
 add_executable(ApiTest ${API_TEST_SOURCE})
 target_include_directories(ApiTest PRIVATE ${CMAKE_SOURCE_DIR}/third_party/googletest/googletest/include
