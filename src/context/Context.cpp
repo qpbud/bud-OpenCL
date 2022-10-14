@@ -3,9 +3,9 @@
 
 namespace qp::cl {
 
-Context& Context::create(std::vector<cl_context_properties>&& properties,
-                         std::vector<cl_device_id>&& devices,
-                         std::function<void(const char*, const void*, size_t)>&& notify) {
+Context& Context::construct(std::vector<cl_context_properties>&& properties,
+                            std::vector<cl_device_id>&& devices,
+                            std::function<void(const char*, const void*, size_t)>&& notify) {
     auto context = new Context(std::move(properties), std::move(devices), std::move(notify));
     return *context;
 }

@@ -4,12 +4,17 @@
 #include "common/Khronos.hpp"
 #include "common/Except.hpp"
 #include "device/detail/Context.hpp"
+#include "device/detail/HostQueue.hpp"
+
 namespace qp::cl::detail {
 
 class Device {
     cl_device_type m_type;
 
     virtual std::unique_ptr<Context> createContext() = 0;
+    std::unique_ptr<HostQueue> createHostQueue(Context& context) {
+        return context.createHostQueue();
+    }
 public:
     template<typename Detail> struct Creator {
         template<typename ... Args> std::unique_ptr<Detail> operator()(Device& device, Args&&... args);
@@ -55,9 +60,10 @@ public:
     template<> \
     template<typename ... Args> \
     std::unique_ptr<Detail> Device::Creator<Detail>::operator()(Device& device, Args&&... args) { \
-        return device.CREATE_FUNCTION(Detail)(); \
+        return device.CREATE_FUNCTION(Detail)(std::forward<Args>(args)...); \
     }
 
 GENERATE_CREATOR(Context)
+GENERATE_CREATOR(HostQueue)
 
 }
