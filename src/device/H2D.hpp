@@ -9,6 +9,7 @@ namespace qp::cl {
 
 template<typename Detail>
 class H1D1 {
+protected:
     Device& m_device;
     std::unique_ptr<Detail> m_detail;
 public:
@@ -19,7 +20,6 @@ public:
         m_detail = detail::Device::Creator<Detail>()(m_device, std::forward<Args>(args)...);
     }
 
-    Device& getDevice() { return m_device; }
     operator Detail&() { return *m_detail; }
 };
 
