@@ -21,4 +21,10 @@ target_include_directories(OpenCL_QP PRIVATE ${CMAKE_SOURCE_DIR}/third_party/Ope
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/config/include
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/assert/include
                                              ${CMAKE_SOURCE_DIR}/src)
-target_compile_definitions(OpenCL_QP PRIVATE CL_TARGET_OPENCL_VERSION=300)
+target_compile_definitions(OpenCL_QP PRIVATE CL_TARGET_OPENCL_VERSION=300
+                                             CL_USE_DEPRECATED_OPENCL_1_0_APIS
+                                             CL_USE_DEPRECATED_OPENCL_1_1_APIS
+                                             CL_USE_DEPRECATED_OPENCL_1_2_APIS
+                                             CL_USE_DEPRECATED_OPENCL_2_0_APIS
+                                             CL_USE_DEPRECATED_OPENCL_2_1_APIS
+                                             CL_USE_DEPRECATED_OPENCL_2_2_APIS)

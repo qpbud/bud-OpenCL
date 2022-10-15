@@ -35,6 +35,7 @@ clCreateCommandQueueWithProperties(cl_context context,
         }
 
         std::vector<cl_queue_properties> propertiesVec;
+        cl_command_queue_properties propertyBits;
         bool enableProfiling = false;
         if (properties) {
             while (properties && *properties != 0) {
@@ -59,6 +60,7 @@ clCreateCommandQueueWithProperties(cl_context context,
                         if (*(properties + 1) & CL_QUEUE_ON_DEVICE_DEFAULT != 0) {
                             throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
                         }
+                        propertyBits = *(properties + 1);
                         break;
                     }
                     case CL_QUEUE_SIZE:
@@ -74,7 +76,7 @@ clCreateCommandQueueWithProperties(cl_context context,
         }
 
         queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
-            deviceInternal, std::move(propertiesVec), enableProfiling);
+            deviceInternal, std::move(propertiesVec), propertyBits, enableProfiling);
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -90,4 +92,144 @@ clCreateCommandQueueWithProperties(cl_context context,
         *errcode_ret = CL_SUCCESS;
     }
     return queue;
+}
+
+CL_API_ENTRY CL_API_PREFIX__VERSION_1_2_DEPRECATED cl_command_queue CL_API_CALL
+clCreateCommandQueue(cl_context context,
+                     cl_device_id device,
+                     cl_command_queue_properties properties,
+                     cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_2_DEPRECATED {
+    cl_command_queue queue;
+    try {
+        if (!context || !context->isValid()) {
+            throw qp::cl::Except(CL_INVALID_CONTEXT);
+        }
+
+        if (!device || !device->isValid()) {
+            throw qp::cl::Except(CL_INVALID_DEVICE);
+        }
+
+        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+        auto& deviceInternal = static_cast<qp::cl::Device&>(*device);
+        bool containsDevice = false;
+        for (cl_uint i = 0; i < contextInternal.getDeviceCount(); i++) {
+            if (&contextInternal.getDevice(i) == &deviceInternal) {
+                containsDevice = true;
+                break;
+            }
+        }
+        if (!containsDevice) {
+            throw qp::cl::Except(CL_INVALID_DEVICE);
+        }
+
+        bool enableProfiling = false;
+        if (properties & (~(CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE)) != 0) {
+            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+        }
+        if (properties & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE != 0) {
+            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+        }
+        if (properties & CL_QUEUE_PROFILING_ENABLE != 0) {
+            enableProfiling = true;
+        }
+
+        queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
+            deviceInternal, std::vector<cl_queue_properties>(), properties, enableProfiling);
+    } catch (const std::exception& e) {
+        if (errcode_ret) {
+            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+                *errcode_ret = except->err();
+            } else {
+                *errcode_ret = CL_OUT_OF_HOST_MEMORY;
+            }
+        }
+        return nullptr;
+    }
+
+    if (errcode_ret) {
+        *errcode_ret = CL_SUCCESS;
+    }
+    return queue;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clSetDefaultDeviceCommandQueue(cl_context context,
+                               cl_device_id device,
+                               cl_command_queue command_queue) CL_API_SUFFIX__VERSION_2_1 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clRetainCommandQueue(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!command_queue || !command_queue->isValid()) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        queueBaseInternal.retain();
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clReleaseCommandQueue(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!command_queue || !command_queue->isValid()) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        queueBaseInternal.release();
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clGetCommandQueueInfo(cl_command_queue command_queue,
+                      cl_command_queue_info param_name,
+                      size_t param_value_size,
+                      void* param_value,
+                      size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!command_queue || !command_queue->isValid()) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+
+        if (param_value) {
+            queueBaseInternal.getInfo(param_name, param_value_size, param_value);
+        }
+        if (param_value_size_ret) {
+            *param_value_size_ret = queueBaseInternal.getInfoSize(param_name);
+        }
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clSetCommandQueueProperty(cl_command_queue command_queue,
+                          cl_command_queue_properties properties,
+                          cl_bool enable,
+                          cl_command_queue_properties* old_properties) CL_API_SUFFIX__VERSION_1_0_DEPRECATED {
+    return CL_INVALID_OPERATION;
 }

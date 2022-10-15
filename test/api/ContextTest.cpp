@@ -354,7 +354,7 @@ TEST(context, clGetContextInfo2) {
 
             err = clGetContextInfo(context, CL_CONTEXT_PROPERTIES, 0, nullptr, &infoSize);
             ASSERT_EQ(err, CL_SUCCESS);
-            ASSERT_EQ(infoSize, 0) << infoSize;
+            ASSERT_EQ(infoSize, 0);
 
             err = clReleaseContext(context);
             ASSERT_EQ(err, CL_SUCCESS);
