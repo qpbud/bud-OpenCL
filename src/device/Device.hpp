@@ -11,6 +11,7 @@ class Device : public Object<_cl_device_id> {
     cl_device_type m_type;
     std::unique_ptr<detail::Device> m_detail;
 public:
+    struct Cpu {};
     struct Vulkan {};
 
     template<typename T> Device(T);

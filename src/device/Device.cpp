@@ -1,8 +1,16 @@
 #include "common/Except.hpp"
 #include "device/Device.hpp"
 #include "device/backend/vulkan/Device.hpp"
+#include "device/backend/cpu/Device.hpp"
 
 namespace qp::cl {
+
+template<>
+Device::Device(Cpu)
+    : Object<_cl_device_id>()
+    , m_detail() {
+    m_detail = std::make_unique<backend::cpu::Device>();
+}
 
 template<>
 Device::Device(Vulkan)

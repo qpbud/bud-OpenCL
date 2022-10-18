@@ -2,7 +2,7 @@
 
 #include "device/detail/Device.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace qp::cl::backend::cpu {
 
 class Device : public detail::Device {
 public:

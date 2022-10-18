@@ -13,8 +13,16 @@ public:
         : m_context(&context) {}
     virtual ~Scope() = default;
 
-    bool operator==(const Scope& other) const {
+    bool canInterOp(const Scope& other) const {
         return m_context.get() == other.m_context.get();
+    }
+
+    bool in(const Context& context) const {
+        return m_context.get() == &context;
+    }
+
+    Context& getContext() {
+        return *m_context;
     }
 };
 
