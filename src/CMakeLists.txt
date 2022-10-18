@@ -3,19 +3,35 @@ set(CMAKE_CXX_STANDARD 17)
 set(PLATFORM_SOURCE platform/Entries.cpp
                     platform/Platform.cpp)
 set(DEVICE_SOURCE device/Entries.cpp
-                  device/Device.cpp
-                  device/backend/vulkan/Device.cpp
-                  device/backend/vulkan/Context.cpp)
+                  device/Device.cpp)
+set(CPU_BACKEND_SOURCE device/backend/cpu/Device.cpp
+                       device/backend/cpu/Context.cpp)
+set(VULKAN_BACKEND_SOURCE device/backend/vulkan/Device.cpp
+                          device/backend/vulkan/Context.cpp)
 set(CONTEXT_SOURCE context/Entries.cpp
                    context/Context.cpp)
 set(QUEUE_SOURCE queue/Entries.cpp
                  queue/QueueBase.cpp
                  queue/QueueHost.cpp)
+set(MEMORY_SOURCE memory/Entries.cpp
+                  memory/MemoryBase.cpp
+                  memory/MemoryBuffer.cpp)
+set(COMMAND_SOURCE command/Entries.cpp
+                   command/CommandBase.cpp
+                   command/CommandHost.cpp
+                   command/CommandDevice.cpp)
+set(EVENT_SOURCE event/EventBase.cpp
+                 event/EventHost.cpp)
 
 add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
                              ${DEVICE_SOURCE}
+                             ${CPU_BACKEND_SOURCE}
+                             ${VULKAN_BACKEND_SOURCE}
                              ${CONTEXT_SOURCE}
-                             ${QUEUE_SOURCE})
+                             ${QUEUE_SOURCE}
+                             ${MEMORY_SOURCE}
+                             ${COMMAND_SOURCE}
+                             ${EVENT_SOURCE})
 target_include_directories(OpenCL_QP PRIVATE ${CMAKE_SOURCE_DIR}/third_party/OpenCL-Headers
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/config/include

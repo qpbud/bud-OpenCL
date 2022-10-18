@@ -5,6 +5,8 @@
 #include "common/Except.hpp"
 #include "device/detail/Context.hpp"
 #include "device/detail/HostQueue.hpp"
+#include "device/detail/Buffer.hpp"
+#include "device/detail/Command.hpp"
 
 namespace qp::cl::detail {
 
@@ -14,6 +16,12 @@ class Device {
     virtual std::unique_ptr<Context> createContext() = 0;
     std::unique_ptr<HostQueue> createHostQueue(Context& context) {
         return context.createHostQueue();
+    }
+    std::unique_ptr<Buffer> createBuffer(Context& context) {
+        return context.createBuffer();
+    }
+    std::unique_ptr<Command> createCommand(Context& context) {
+        return context.createCommand();
     }
 public:
     template<typename Detail> struct Creator {
@@ -65,5 +73,7 @@ public:
 
 GENERATE_CREATOR(Context)
 GENERATE_CREATOR(HostQueue)
+GENERATE_CREATOR(Buffer)
+GENERATE_CREATOR(Command)
 
 }

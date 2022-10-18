@@ -7,10 +7,12 @@
 namespace qp::cl {
 
 enum class ObjectMagic {
-    platform = 0x1,
-    device = 0x2,
-    context = 0x4,
-    queue = 0x7,
+    platform = 0x0,
+    device = 0x1,
+    context = 0x2,
+    queue = 0x4,
+    memory = 0x6,
+    event = 0x7,
     invalid = 0xffff,
 };
 
@@ -34,10 +36,12 @@ struct _cl_platform_id : public qp::cl::ObjectBase<qp::cl::ObjectMagic::platform
 struct _cl_device_id : public qp::cl::ObjectBase<qp::cl::ObjectMagic::device> {};
 struct _cl_context : public qp::cl::ObjectBase<qp::cl::ObjectMagic::context> {};
 struct _cl_command_queue: public qp::cl::ObjectBase<qp::cl::ObjectMagic::queue> {};
+struct _cl_mem: public qp::cl::ObjectBase<qp::cl::ObjectMagic::memory> {};
+struct _cl_event: public qp::cl::ObjectBase<qp::cl::ObjectMagic::event> {};
 
 namespace qp::cl {
 
-template<typename T, typename Enable = void> class Object;
+template<typename T, typename Enable = void> class Object {};
 
 template<typename T>
 class Object<T,
@@ -46,7 +50,9 @@ class Object<T,
 
 template<typename T>
 class Object<T, std::enable_if_t<std::is_same_v<T, _cl_context> ||
-                                 std::is_same_v<T, _cl_command_queue>>> : public T, public boost::intrusive_ref_counter<Object<T>> {
+                                 std::is_same_v<T, _cl_command_queue> ||
+                                 std::is_same_v<T, _cl_mem> ||
+                                 std::is_same_v<T, _cl_event>>> : public T, public boost::intrusive_ref_counter<Object<T>> {
 public:
     Object()
         : T()

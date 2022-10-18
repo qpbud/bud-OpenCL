@@ -44,6 +44,9 @@ clGetDeviceIDs(cl_platform_id platform,
                     devices[count] = &device;
                 }
                 count++;
+                if (count == num_entries) {
+                    break;
+                }
             }
         }
 

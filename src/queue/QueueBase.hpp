@@ -27,6 +27,8 @@ public:
 
     size_t getInfoSize(cl_command_queue_info info) const;
     void getInfo(cl_command_queue_info info, size_t size, void* value) const;
+
+    Type type() const;
 };
 
 template<QueueBase::Type type> class Queue;

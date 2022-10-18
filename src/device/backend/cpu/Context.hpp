@@ -4,7 +4,7 @@
 #include "device/detail/HostQueue.hpp"
 #include "device/detail/Buffer.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace qp::cl::backend::cpu {
 
 class Context : public detail::Context {
 public:

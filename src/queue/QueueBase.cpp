@@ -15,7 +15,6 @@ QueueBase::QueueBase(Context& context,
     , m_properties(std::move(properties))
     , m_propertyBits(propertyBits) {}
 
-
 size_t QueueBase::getInfoSize(cl_command_queue_info info) const {
     switch (info) {
         case CL_QUEUE_CONTEXT:
@@ -65,6 +64,10 @@ void QueueBase::getInfo(cl_command_queue_info info, size_t size, void* value) co
         default:
             throw Except(CL_INVALID_VALUE);
     }
+}
+
+QueueBase::Type QueueBase::type() const {
+    return m_type;
 }
 
 }

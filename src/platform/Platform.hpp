@@ -27,8 +27,6 @@ class Platform : public Object<_cl_platform_id> {
     std::vector<cl_name_version> m_extensionsWithVersion;
     cl_ulong m_hostTimerResolution;
     std::vector<Device> m_devices;
-
-    template<typename T> void createDevices();
 public:
     static cl_uint count();
     static Platform& get(cl_uint index);

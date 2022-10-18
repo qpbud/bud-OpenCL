@@ -19,16 +19,12 @@ Platform::Platform(QP)
     , m_extensionsWithVersion()
     , m_hostTimerResolution(0)
     , m_devices() {
-}
-
-template<> 
-void Platform::createDevices<Platform::QP>() {
     m_devices.emplace_back(Device::Vulkan());
+    m_devices.emplace_back(Device::Cpu());
 }
 
 void Platform::init() {
     s_platforms.emplace_back(QP());
-    s_platforms.back().createDevices<QP>();
 }
 
 cl_uint Platform::count() {
