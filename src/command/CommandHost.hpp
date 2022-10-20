@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
+#include "common/Struct.hpp"
 #include "memory/MemoryBuffer.hpp"
 #include "command/CommandBase.hpp"
 #include "event/EventBase.hpp"
@@ -18,6 +19,10 @@ class Command<CommandBase::Type::host> : public CommandBase {
                 Memory<MemoryBase::Type::buffer>& buffer, size_t offset, size_t size, void* ptr);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeBuffer)>,
                 Memory<MemoryBase::Type::buffer>& buffer, size_t offset, size_t size, const void* ptr);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::readBufferRect)>,
+                Memory<MemoryBase::Type::buffer>& buffer, void* ptr, const CopyRegion& copyRegion);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeBufferRect)>,
+                Memory<MemoryBase::Type::buffer>& buffer, const void* ptr, const CopyRegion& copyRegion);
 public:
     Command();
 

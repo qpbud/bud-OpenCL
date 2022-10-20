@@ -8,10 +8,15 @@ Memory<MemoryBase::Type::buffer>::Memory(Context& context,
                                          void* hostPtr,
                                          size_t size)
     : MemoryBase(context, MemoryBase::Type::buffer, std::move(properties), flags, hostPtr)
-    , H1DN<detail::Buffer>() {
+    , H1DN<detail::Buffer>()
+    , m_size(size) {
     for (cl_uint i = 0; i < context.getDeviceCount(); i++) {
         append(context.getDevice(i), context[context.getDevice(i)]);
     }
+}
+
+size_t Memory<MemoryBase::Type::buffer>::size() const {
+    return m_size;
 }
 
 }
