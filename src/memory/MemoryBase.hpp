@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 #include "common/Khronos.hpp"
 #include "common/Object.hpp"
 #include "device/Device.hpp"
@@ -18,6 +19,13 @@ private:
     cl_mem_flags m_flags;
     void* m_hostPtr;
 public:
+    struct Region {
+        std::array<size_t, 3> origin;
+        std::array<size_t, 3> region;
+        size_t rowPitch;
+        size_t slicePitch;
+    };
+
     MemoryBase(Context& context,
                Type type,
                std::vector<cl_mem_properties>&& properties,

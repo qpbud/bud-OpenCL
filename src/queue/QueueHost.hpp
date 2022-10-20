@@ -30,7 +30,12 @@ public:
                         boost::intrusive_ptr<EventBase> toSetEvent,
                         Args&&... args) {
         using CommandType = typename CommandBase::TypeMap<type>::type;
-        auto command = std::make_unique<CommandType>();
+        std::unique_ptr<CommandType> command;
+        if constexpr (std::is_same_v<CommandType, Command<CommandBase::Type::host>>) {
+            command = std::make_unique<CommandType>();
+        } else {
+            command = std::make_unique<CommandType>(*m_context, m_device);
+        }
         command->append<CommandBase::Category::waitEvents>(std::move(waitList));
         command->append<CommandBase::TypeMap<type>::value>(std::forward<Args>(args)...);
         command->append<CommandBase::Category::setEvent>(std::move(toSetEvent));
