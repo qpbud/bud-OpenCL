@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include "common/Khronos.hpp"
 
 namespace qp::cl {
 

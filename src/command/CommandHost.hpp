@@ -23,6 +23,10 @@ class Command<CommandBase::Type::host> : public CommandBase {
                 Memory<MemoryBase::Type::buffer>& buffer, void* ptr, const CopyRegion& copyRegion);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeBufferRect)>,
                 Memory<MemoryBase::Type::buffer>& buffer, const void* ptr, const CopyRegion& copyRegion);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::mapBuffer)>,
+                Memory<MemoryBase::Type::buffer>& buffer, void* mappedBuffer, cl_map_flags flags, size_t offset, size_t size);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::readImage)>);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeImage)>);
 public:
     Command();
 

@@ -10,6 +10,7 @@
 #include "memory/MemoryBuffer.hpp"
 #include "event/EventBase.hpp"
 #include "event/EventHost.hpp"
+#include "event/EventDevice.hpp"
 
 static bool isOverlap(const qp::cl::CopyRegion& copyRegion) {
     size_t rowPitch = copyRegion.src.rowPitch;
@@ -505,10 +506,11 @@ clEnqueueCopyBuffer(cl_command_queue command_queue,
             waitList.emplace_back(&eventBaseInternal);
         }
 
-        auto& eventHostInternal = queueBaseInternal.getContext().create<qp::cl::Event<qp::cl::EventBase::Type::host>>();
-        boost::intrusive_ptr<qp::cl::EventBase> toSetEvent{&eventHostInternal};
+        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        auto& eventDeviceInternal = queueBaseInternal.getContext().create<qp::cl::Event<qp::cl::EventBase::Type::device>>(queueHostInternal.getDevice());
+        boost::intrusive_ptr<qp::cl::EventBase> toSetEvent{&eventDeviceInternal};
         if (event) {
-            *event = &eventHostInternal;
+            *event = &eventDeviceInternal;
         } else {
             toSetEvent->release();
         }
@@ -517,7 +519,6 @@ clEnqueueCopyBuffer(cl_command_queue command_queue,
             {{src_offset, 0, 0}, size, size},
             {{dst_offset, 0, 0}, size, size},
             {size, 1, 1}};
-        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
         queueHostInternal.enqueueCommand<CL_COMMAND_COPY_BUFFER>(
             std::move(waitList), toSetEvent, srcMemoryBufferInternal, dstMemoryBufferInternal, copyRegion);
     } catch (const std::exception& e) {
@@ -641,15 +642,15 @@ clEnqueueCopyBufferRect(cl_command_queue command_queue,
             }
         }
 
-        auto& eventHostInternal = queueBaseInternal.getContext().create<qp::cl::Event<qp::cl::EventBase::Type::host>>();
-        boost::intrusive_ptr<qp::cl::EventBase> toSetEvent{&eventHostInternal};
+        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        auto& eventDeviceInternal = queueBaseInternal.getContext().create<qp::cl::Event<qp::cl::EventBase::Type::device>>(queueHostInternal.getDevice());
+        boost::intrusive_ptr<qp::cl::EventBase> toSetEvent{&eventDeviceInternal};
         if (event) {
-            *event = &eventHostInternal;
+            *event = &eventDeviceInternal;
         } else {
             toSetEvent->release();
         }
 
-        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
         queueHostInternal.enqueueCommand<CL_COMMAND_COPY_BUFFER_RECT>(
             std::move(waitList), toSetEvent, srcMemoryBufferInternal, dstMemoryBufferInternal, copyRegion);
     } catch (const std::exception& e) {
@@ -660,4 +661,214 @@ clEnqueueCopyBufferRect(cl_command_queue command_queue,
     }
 
     return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueFillBuffer(cl_command_queue command_queue,
+                    cl_mem buffer,
+                    const void* pattern,
+                    size_t pattern_size,
+                    size_t offset,
+                    size_t size,
+                    cl_uint num_events_in_wait_list,
+                    const cl_event* event_wait_list,
+                    cl_event* event) CL_API_SUFFIX__VERSION_1_2 {
+    try {
+        if (!command_queue || !command_queue->isValid()) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        if (queueBaseInternal.type() != qp::cl::QueueBase::Type::host) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        if (!buffer || !buffer->isValid()) {
+            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+        }
+        auto& memoryBaseInternal = static_cast<qp::cl::MemoryBase&>(*buffer);
+        if (memoryBaseInternal.type() != qp::cl::MemoryBase::Type::buffer) {
+            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+        }
+
+        if (!queueBaseInternal.canInterOp(memoryBaseInternal)) {
+            throw qp::cl::Except(CL_INVALID_CONTEXT);
+        }
+
+        auto& memoryBufferInternal = static_cast<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>&>(memoryBaseInternal);
+        if (offset + size > memoryBufferInternal.size()) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        if (!pattern || (pattern_size != 1 &&
+                         pattern_size != 2 &&
+                         pattern_size != 4 &&
+                         pattern_size != 8 &&
+                         pattern_size != 16 &&
+                         pattern_size != 32 &&
+                         pattern_size != 64 &&
+                         pattern_size != 128)) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        if (offset % pattern_size != 0 || size % pattern_size != 0) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        if ((!event_wait_list && num_events_in_wait_list > 0) ||
+            (event_wait_list && num_events_in_wait_list == 0)) {
+            throw qp::cl::Except(CL_INVALID_EVENT_WAIT_LIST);
+        }
+        std::vector<boost::intrusive_ptr<qp::cl::EventBase>> waitList;
+        for (cl_uint i = 0; i < num_events_in_wait_list; i++) {
+            if (!event_wait_list[i] || !event_wait_list[i]->isValid()) {
+                throw qp::cl::Except(CL_INVALID_EVENT_WAIT_LIST);
+            }
+            auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event_wait_list[i]);
+            if (!queueBaseInternal.canInterOp(eventBaseInternal)) {
+                throw qp::cl::Except(CL_INVALID_CONTEXT);
+            }
+            waitList.emplace_back(&eventBaseInternal);
+        }
+
+        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        auto& eventDeviceInternal = queueBaseInternal.getContext().create<qp::cl::Event<qp::cl::EventBase::Type::device>>(queueHostInternal.getDevice());
+        boost::intrusive_ptr<qp::cl::EventBase> toSetEvent{&eventDeviceInternal};
+        if (event) {
+            *event = &eventDeviceInternal;
+        } else {
+            toSetEvent->release();
+        }
+
+        queueHostInternal.enqueueCommand<CL_COMMAND_FILL_BUFFER>(
+            std::move(waitList), toSetEvent, memoryBufferInternal, pattern, pattern_size, offset, size);
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY void* CL_API_CALL
+clEnqueueMapBuffer(cl_command_queue command_queue,
+                   cl_mem buffer,
+                   cl_bool blocking_map,
+                   cl_map_flags map_flags,
+                   size_t offset,
+                   size_t size,
+                   cl_uint num_events_in_wait_list,
+                   const cl_event* event_wait_list,
+                   cl_event* event,
+                   cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!command_queue || !command_queue->isValid()) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        if (queueBaseInternal.type() != qp::cl::QueueBase::Type::host) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        if (!buffer || !buffer->isValid()) {
+            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+        }
+        auto& memoryBaseInternal = static_cast<qp::cl::MemoryBase&>(*buffer);
+        if (memoryBaseInternal.type() != qp::cl::MemoryBase::Type::buffer) {
+            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+        }
+
+        if (!queueBaseInternal.canInterOp(memoryBaseInternal)) {
+            throw qp::cl::Except(CL_INVALID_CONTEXT);
+        }
+
+        auto& memoryBufferInternal = static_cast<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>&>(memoryBaseInternal);
+        if (offset + size > memoryBufferInternal.size() || size == 0) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        if (map_flags != CL_MAP_READ &&
+            map_flags != CL_MAP_WRITE &&
+            map_flags != CL_MAP_WRITE_INVALIDATE_REGION) {
+            throw qp::cl::Except(CL_INVALID_VALUE);
+        }
+
+        if ((!event_wait_list && num_events_in_wait_list > 0) ||
+            (event_wait_list && num_events_in_wait_list == 0)) {
+            throw qp::cl::Except(CL_INVALID_EVENT_WAIT_LIST);
+        }
+        std::vector<boost::intrusive_ptr<qp::cl::EventBase>> waitList;
+        for (cl_uint i = 0; i < num_events_in_wait_list; i++) {
+            if (!event_wait_list[i] || !event_wait_list[i]->isValid()) {
+                throw qp::cl::Except(CL_INVALID_EVENT_WAIT_LIST);
+            }
+            auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event_wait_list[i]);
+            if (!queueBaseInternal.canInterOp(eventBaseInternal)) {
+                throw qp::cl::Except(CL_INVALID_CONTEXT);
+            }
+            waitList.emplace_back(&eventBaseInternal);
+        }
+
+        auto& eventHostInternal = queueBaseInternal.getContext().create<qp::cl::Event<qp::cl::EventBase::Type::host>>();
+        boost::intrusive_ptr<qp::cl::EventBase> toSetEvent{&eventHostInternal};
+        if (event) {
+            *event = &eventHostInternal;
+        } else {
+            toSetEvent->release();
+        }
+
+        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        void* mappedBuffer;
+        queueHostInternal.enqueueCommand<CL_COMMAND_MAP_BUFFER>(
+            std::move(waitList), toSetEvent, memoryBufferInternal, &mappedBuffer, map_flags, offset, size);
+
+        if (blocking_map) {
+            eventHostInternal.hostWait();
+        }
+
+        if (errcode_ret) {
+            *errcode_ret = CL_SUCCESS;
+        }
+        return mappedBuffer;
+    } catch (const std::exception& e) {
+        if (errcode_ret) {
+            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+                *errcode_ret = except->err();
+            } else {
+                *errcode_ret = CL_OUT_OF_HOST_MEMORY;
+            }
+        }
+        return nullptr;
+    }
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueReadImage(cl_command_queue command_queue,
+                   cl_mem image,
+                   cl_bool blocking_read,
+                   const size_t * origin,
+                   const size_t * region,
+                   size_t row_pitch,
+                   size_t slice_pitch,
+                   void* ptr,
+                   cl_uint num_events_in_wait_list,
+                   const cl_event* event_wait_list,
+                   cl_event* event) CL_API_SUFFIX__VERSION_1_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueWriteImage(cl_command_queue command_queue,
+                    cl_mem image,
+                    cl_bool blocking_write,
+                    const size_t* origin,
+                    const size_t* region,
+                    size_t input_row_pitch,
+                    size_t input_slice_pitch,
+                    const void* ptr,
+                    cl_uint num_events_in_wait_list,
+                    const cl_event* event_wait_list,
+                    cl_event* event) CL_API_SUFFIX__VERSION_1_0 {
+    return CL_INVALID_OPERATION;
 }

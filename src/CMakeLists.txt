@@ -15,13 +15,15 @@ set(QUEUE_SOURCE queue/Entries.cpp
                  queue/QueueHost.cpp)
 set(MEMORY_SOURCE memory/Entries.cpp
                   memory/MemoryBase.cpp
-                  memory/MemoryBuffer.cpp)
+                  memory/MemoryBuffer.cpp
+                  memory/MemoryImage.cpp)
 set(COMMAND_SOURCE command/Entries.cpp
                    command/CommandBase.cpp
                    command/CommandHost.cpp
                    command/CommandDevice.cpp)
 set(EVENT_SOURCE event/EventBase.cpp
-                 event/EventHost.cpp)
+                 event/EventHost.cpp
+                 event/EventDevice.cpp)
 
 add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
                              ${DEVICE_SOURCE}

@@ -37,6 +37,7 @@ public:
     void getInfo(cl_mem_info info, size_t size, void* value) const;
 
     Type type() const;
+    bool withFlag(cl_mem_flags flag) const;
 };
 
 template<MemoryBase::Type type> class Memory;

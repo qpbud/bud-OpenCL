@@ -69,4 +69,8 @@ MemoryBase::Type MemoryBase::type() const {
     return m_type;
 }
 
+bool MemoryBase::withFlag(cl_mem_flags flag) const {
+    return m_flags & flag != 0;
+}
+
 }
