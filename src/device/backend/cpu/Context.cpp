@@ -2,6 +2,9 @@
 #include "device/backend/cpu/HostQueue.hpp"
 #include "device/backend/cpu/Buffer.hpp"
 #include "device/backend/cpu/Command.hpp"
+#include "device/backend/cpu/Event.hpp"
+#include "device/backend/cpu/Image.hpp"
+
 
 namespace qp::cl::backend::cpu {
 
@@ -15,6 +18,14 @@ std::unique_ptr<detail::Buffer> Context::createBuffer() {
 
 std::unique_ptr<detail::Command> Context::createCommand() {
     return std::make_unique<Command>();
+}
+
+std::unique_ptr<detail::Event> Context::createEvent() {
+    return std::make_unique<Event>();
+}
+
+std::unique_ptr<detail::Image> Context::createImage() {
+    return std::make_unique<Image>();
 }
 
 }

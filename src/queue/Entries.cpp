@@ -11,7 +11,6 @@ clCreateCommandQueueWithProperties(cl_context context,
                                    cl_device_id device,
                                    const cl_queue_properties* properties,
                                    cl_int* errcode_ret) CL_API_SUFFIX__VERSION_2_0 {
-    cl_command_queue queue;
     try {
         if (!context || !context->isValid()) {
             throw qp::cl::Except(CL_INVALID_CONTEXT);
@@ -75,8 +74,13 @@ clCreateCommandQueueWithProperties(cl_context context,
             propertiesVec.push_back(0);
         }
 
-        queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
+        cl_command_queue queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
             deviceInternal, std::move(propertiesVec), propertyBits, enableProfiling);
+
+        if (errcode_ret) {
+            *errcode_ret = CL_SUCCESS;
+        }
+        return queue;
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -87,11 +91,6 @@ clCreateCommandQueueWithProperties(cl_context context,
         }
         return nullptr;
     }
-
-    if (errcode_ret) {
-        *errcode_ret = CL_SUCCESS;
-    }
-    return queue;
 }
 
 CL_API_ENTRY CL_API_PREFIX__VERSION_1_2_DEPRECATED cl_command_queue CL_API_CALL
@@ -99,7 +98,6 @@ clCreateCommandQueue(cl_context context,
                      cl_device_id device,
                      cl_command_queue_properties properties,
                      cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_2_DEPRECATED {
-    cl_command_queue queue;
     try {
         if (!context || !context->isValid()) {
             throw qp::cl::Except(CL_INVALID_CONTEXT);
@@ -133,8 +131,13 @@ clCreateCommandQueue(cl_context context,
             enableProfiling = true;
         }
 
-        queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
+        cl_command_queue queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
             deviceInternal, std::vector<cl_queue_properties>(), properties, enableProfiling);
+
+        if (errcode_ret) {
+            *errcode_ret = CL_SUCCESS;
+        }
+        return queue;
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -145,11 +148,6 @@ clCreateCommandQueue(cl_context context,
         }
         return nullptr;
     }
-
-    if (errcode_ret) {
-        *errcode_ret = CL_SUCCESS;
-    }
-    return queue;
 }
 
 CL_API_ENTRY cl_int CL_API_CALL

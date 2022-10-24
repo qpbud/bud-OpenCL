@@ -15,7 +15,6 @@ clCreateContext(const cl_context_properties* properties,
                                                void* user_data),
                 void* user_data,
                 cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-    cl_context context;
     try {
         std::vector<cl_context_properties> propertiesVec;
         if (properties) {
@@ -56,10 +55,15 @@ clCreateContext(const cl_context_properties* properties,
             devicesVec[i] = devices[i];
         }
 
-        context = &qp::cl::Context::construct(std::move(propertiesVec), std::move(devicesVec),
+        cl_context context = &qp::cl::Context::construct(std::move(propertiesVec), std::move(devicesVec),
             [pfn_notify, user_data](const char* errInfo, const void* privateInfo, size_t privateInfoSize) {
                 pfn_notify(errInfo, privateInfo, privateInfoSize, user_data);
             });
+
+        if (errcode_ret) {
+            *errcode_ret = CL_SUCCESS;
+        }
+        return context;
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -70,11 +74,6 @@ clCreateContext(const cl_context_properties* properties,
         }
         return nullptr;
     }
-
-    if (errcode_ret) {
-        *errcode_ret = CL_SUCCESS;
-    }
-    return context;
 }
 
 CL_API_ENTRY cl_context CL_API_CALL
@@ -86,7 +85,6 @@ clCreateContextFromType(const cl_context_properties* properties,
                                                        void* user_data),
                         void* user_data,
                         cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-    cl_context context;
     try {
         qp::cl::Platform* platformInternal = &qp::cl::Platform::get(0);
         std::vector<cl_context_properties> propertiesVec;
@@ -141,10 +139,15 @@ clCreateContextFromType(const cl_context_properties* properties,
             throw qp::cl::Except(CL_DEVICE_NOT_FOUND);
         }
 
-        context = &qp::cl::Context::construct(std::move(propertiesVec), std::move(devicesVec),
+        cl_context context = &qp::cl::Context::construct(std::move(propertiesVec), std::move(devicesVec),
             [pfn_notify, user_data](const char* errInfo, const void* privateInfo, size_t privateInfoSize) {
                 pfn_notify(errInfo, privateInfo, privateInfoSize, user_data);
             });
+
+        if (errcode_ret) {
+            *errcode_ret = CL_SUCCESS;
+        }
+        return context;
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -155,11 +158,6 @@ clCreateContextFromType(const cl_context_properties* properties,
         }
         return nullptr;
     }
-
-    if (errcode_ret) {
-        *errcode_ret = CL_SUCCESS;
-    }
-    return context;
 }
 
 CL_API_ENTRY cl_int CL_API_CALL

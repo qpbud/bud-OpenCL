@@ -12,7 +12,6 @@ clCreateBuffer(cl_context context,
                size_t size,
                void* host_ptr,
                cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-    cl_mem buffer;
     try {
         if (!context || !context->isValid()) {
             throw qp::cl::Except(CL_INVALID_CONTEXT);
@@ -51,8 +50,13 @@ clCreateBuffer(cl_context context,
 
         auto& contextInternal = static_cast<qp::cl::Context&>(*context);
 
-        buffer = &contextInternal.create<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>>(
+        cl_mem buffer = &contextInternal.create<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>>(
             std::vector<cl_mem_properties>(), flags, host_ptr, size);
+
+        if (errcode_ret) {
+            *errcode_ret = CL_SUCCESS;
+        }
+        return buffer;
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -63,11 +67,6 @@ clCreateBuffer(cl_context context,
         }
         return nullptr;
     }
-
-    if (errcode_ret) {
-        *errcode_ret = CL_SUCCESS;
-    }
-    return buffer;
 }
 
 CL_API_ENTRY cl_mem CL_API_CALL
@@ -77,7 +76,6 @@ clCreateBufferWithProperties(cl_context context,
                              size_t size,
                              void* host_ptr,
                              cl_int* errcode_ret) CL_API_SUFFIX__VERSION_3_0 {
-    cl_mem buffer;
     try {
         if (!context || !context->isValid()) {
             throw qp::cl::Except(CL_INVALID_CONTEXT);
@@ -128,8 +126,13 @@ clCreateBufferWithProperties(cl_context context,
 
         auto& contextInternal = static_cast<qp::cl::Context&>(*context);
 
-        buffer = &contextInternal.create<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>>(
+        cl_mem buffer = &contextInternal.create<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>>(
             std::move(propertiesVec), flags, host_ptr, size);
+
+        if (errcode_ret) {
+            *errcode_ret = CL_SUCCESS;
+        }
+        return buffer;
     } catch (const std::exception& e) {
         if (errcode_ret) {
             if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
@@ -140,11 +143,6 @@ clCreateBufferWithProperties(cl_context context,
         }
         return nullptr;
     }
-
-    if (errcode_ret) {
-        *errcode_ret = CL_SUCCESS;
-    }
-    return buffer;
 }
 
 CL_API_ENTRY cl_mem CL_API_CALL
@@ -157,4 +155,73 @@ clCreateSubBuffer(cl_mem buffer,
         *errcode_ret = CL_INVALID_OPERATION;
     }
     return nullptr;
+}
+
+CL_API_ENTRY cl_mem CL_API_CALL
+clCreateImage(cl_context context,
+              cl_mem_flags flags,
+              const cl_image_format* image_format,
+              const cl_image_desc* image_desc,
+              void* host_ptr,
+              cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_2 {
+    if (errcode_ret) {
+        *errcode_ret = CL_INVALID_OPERATION;
+    }
+    return nullptr;
+}
+
+CL_API_ENTRY cl_mem CL_API_CALL
+clCreateImageWithProperties(cl_context context,
+                            const cl_mem_properties* properties,
+                            cl_mem_flags flags,
+                            const cl_image_format* image_format,
+                            const cl_image_desc* image_desc,
+                            void* host_ptr,
+                            cl_int* errcode_ret) CL_API_SUFFIX__VERSION_3_0 {
+    if (errcode_ret) {
+        *errcode_ret = CL_INVALID_OPERATION;
+    }
+    return nullptr;
+}
+
+CL_API_ENTRY CL_API_PREFIX__VERSION_1_1_DEPRECATED cl_mem CL_API_CALL
+clCreateImage2D(cl_context context,
+                cl_mem_flags flags,
+                const cl_image_format* image_format,
+                size_t image_width,
+                size_t image_height,
+                size_t image_row_pitch,
+                void* host_ptr,
+                cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_1_DEPRECATED {
+    if (errcode_ret) {
+        *errcode_ret = CL_INVALID_OPERATION;
+    }
+    return nullptr;
+}
+
+CL_API_ENTRY CL_API_PREFIX__VERSION_1_1_DEPRECATED cl_mem CL_API_CALL
+clCreateImage3D(cl_context context,
+                cl_mem_flags flags,
+                const cl_image_format* image_format,
+                size_t image_width,
+                size_t image_height,
+                size_t image_depth,
+                size_t image_row_pitch,
+                size_t image_slice_pitch,
+                void* host_ptr,
+                cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_1_DEPRECATED {
+    if (errcode_ret) {
+        *errcode_ret = CL_INVALID_OPERATION;
+    }
+    return nullptr;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clGetSupportedImageFormats(cl_context context,
+                           cl_mem_flags flags,
+                           cl_mem_object_type image_type,
+                           cl_uint num_entries,
+                           cl_image_format* image_formats,
+                           cl_uint* num_image_formats) CL_API_SUFFIX__VERSION_1_0 {
+    return CL_INVALID_OPERATION;
 }

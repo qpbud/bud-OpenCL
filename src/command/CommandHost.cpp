@@ -30,4 +30,14 @@ void Command<CommandBase::Type::host>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeBufferRect)>,
     Memory<MemoryBase::Type::buffer>& buffer, const void* ptr, const CopyRegion& copyRegion) {}
 
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::mapBuffer)>,
+    Memory<MemoryBase::Type::buffer>& buffer, void* mappedBuffer, cl_map_flags flags, size_t offset, size_t size) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::readImage)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeImage)>) {}
+
 }
