@@ -4,6 +4,8 @@
 #include "device/backend/vulkan/Command.hpp"
 #include "device/backend/vulkan/Event.hpp"
 #include "device/backend/vulkan/Image.hpp"
+#include "device/backend/vulkan/Pipe.hpp"
+#include "device/backend/vulkan/Sampler.hpp"
 
 namespace qp::cl::backend::vulkan {
 
@@ -25,6 +27,14 @@ std::unique_ptr<detail::Event> Context::createEvent() {
 
 std::unique_ptr<detail::Image> Context::createImage() {
     return std::make_unique<Image>();
+}
+
+std::unique_ptr<detail::Pipe> Context::createPipe() {
+    return std::make_unique<Pipe>();
+}
+
+std::unique_ptr<detail::Sampler> Context::createSampler() {
+    return std::make_unique<Sampler>();
 }
 
 }

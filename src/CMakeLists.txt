@@ -16,7 +16,8 @@ set(QUEUE_SOURCE queue/Entries.cpp
 set(MEMORY_SOURCE memory/Entries.cpp
                   memory/MemoryBase.cpp
                   memory/MemoryBuffer.cpp
-                  memory/MemoryImage.cpp)
+                  memory/MemoryImage.cpp
+                  memory/MemoryPipe.cpp)
 set(COMMAND_SOURCE command/Entries.cpp
                    command/CommandBase.cpp
                    command/CommandHost.cpp
@@ -24,6 +25,8 @@ set(COMMAND_SOURCE command/Entries.cpp
 set(EVENT_SOURCE event/EventBase.cpp
                  event/EventHost.cpp
                  event/EventDevice.cpp)
+set(SAMPLER_SOURCE sampler/Entries.cpp
+                   sampler/Sampler.cpp)
 
 add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
                              ${DEVICE_SOURCE}
@@ -33,7 +36,8 @@ add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
                              ${QUEUE_SOURCE}
                              ${MEMORY_SOURCE}
                              ${COMMAND_SOURCE}
-                             ${EVENT_SOURCE})
+                             ${EVENT_SOURCE}
+                             ${SAMPLER_SOURCE})
 target_include_directories(OpenCL_QP PRIVATE ${CMAKE_SOURCE_DIR}/third_party/OpenCL-Headers
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/config/include

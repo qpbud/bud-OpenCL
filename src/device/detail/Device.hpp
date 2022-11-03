@@ -9,6 +9,8 @@
 #include "device/detail/Command.hpp"
 #include "device/detail/Event.hpp"
 #include "device/detail/Image.hpp"
+#include "device/detail/Pipe.hpp"
+#include "device/detail/Sampler.hpp"
 
 namespace qp::cl::detail {
 
@@ -30,6 +32,12 @@ class Device {
     }
     std::unique_ptr<Image> createImage(Context& context) {
         return context.createImage();
+    }
+    std::unique_ptr<Pipe> createPipe(Context& context) {
+        return context.createPipe();
+    }
+    std::unique_ptr<Sampler> createSampler(Context& context) {
+        return context.createSampler();
     }
 public:
     template<typename Detail> struct Creator {
@@ -85,5 +93,7 @@ GENERATE_CREATOR(Buffer)
 GENERATE_CREATOR(Command)
 GENERATE_CREATOR(Event)
 GENERATE_CREATOR(Image)
+GENERATE_CREATOR(Pipe)
+GENERATE_CREATOR(Sampler)
 
 }
