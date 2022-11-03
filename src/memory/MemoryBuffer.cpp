@@ -7,7 +7,7 @@ Memory<MemoryBase::Type::buffer>::Memory(Context& context,
                                          cl_mem_flags flags,
                                          void* hostPtr,
                                          size_t size)
-    : MemoryBase(context, MemoryBase::Type::buffer, std::move(properties), flags, hostPtr)
+    : MemoryBase(context, MemoryBase::Type::buffer, CL_MEM_OBJECT_BUFFER, std::move(properties), flags, hostPtr)
     , H1DN<detail::Buffer>()
     , m_size(size) {
     for (cl_uint i = 0; i < context.getDeviceCount(); i++) {

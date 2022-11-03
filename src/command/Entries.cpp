@@ -872,3 +872,166 @@ clEnqueueWriteImage(cl_command_queue command_queue,
                     cl_event* event) CL_API_SUFFIX__VERSION_1_0 {
     return CL_INVALID_OPERATION;
 }
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueCopyImage(cl_command_queue command_queue,
+                   cl_mem src_image,
+                   cl_mem dst_image,
+                   const size_t* src_origin,
+                   const size_t* dst_origin,
+                   const size_t* region,
+                   cl_uint num_events_in_wait_list,
+                   const cl_event* event_wait_list,
+                   cl_event* event) CL_API_SUFFIX__VERSION_1_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueFillImage(cl_command_queue command_queue,
+                   cl_mem image,
+                   const void* fill_color,
+                   const size_t* origin,
+                   const size_t* region,
+                   cl_uint num_events_in_wait_list,
+                   const cl_event* event_wait_list,
+                   cl_event* event) CL_API_SUFFIX__VERSION_1_2 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueCopyImageToBuffer(cl_command_queue command_queue,
+                           cl_mem src_image,
+                           cl_mem dst_buffer,
+                           const size_t* src_origin,
+                           const size_t* region,
+                           size_t dst_offset,
+                           cl_uint num_events_in_wait_list,
+                           const cl_event* event_wait_list,
+                           cl_event* event) CL_API_SUFFIX__VERSION_1_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueCopyBufferToImage(cl_command_queue command_queue,
+                           cl_mem src_buffer,
+                           cl_mem dst_image,
+                           size_t src_offset,
+                           const size_t* dst_origin,
+                           const size_t* region,
+                           cl_uint num_events_in_wait_list,
+                           const cl_event* event_wait_list,
+                           cl_event* event) CL_API_SUFFIX__VERSION_1_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY void* CL_API_CALL
+clEnqueueMapImage(cl_command_queue command_queue,
+                  cl_mem image,
+                  cl_bool blocking_map,
+                  cl_map_flags map_flags,
+                  const size_t* origin,
+                  const size_t* region,
+                  size_t* image_row_pitch,
+                  size_t* image_slice_pitch,
+                  cl_uint num_events_in_wait_list,
+                  const cl_event* event_wait_list,
+                  cl_event* event,
+                  cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
+    if (errcode_ret) {
+        *errcode_ret = CL_INVALID_OPERATION;
+    }
+    return nullptr;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueUnmapMemObject(cl_command_queue command_queue,
+                        cl_mem memobj,
+                        void* mapped_ptr,
+                        cl_uint num_events_in_wait_list,
+                        const cl_event* event_wait_list,
+                        cl_event* event) CL_API_SUFFIX__VERSION_1_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueMigrateMemObjects(cl_command_queue command_queue,
+                           cl_uint num_mem_objects,
+                           const cl_mem* mem_objects,
+                           cl_mem_migration_flags flags,
+                           cl_uint num_events_in_wait_list,
+                           const cl_event* event_wait_list,
+                           cl_event* event) CL_API_SUFFIX__VERSION_1_2 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueSVMFree(cl_command_queue command_queue,
+                 cl_uint num_svm_pointers,
+                 void* svm_pointers[],
+                 void (CL_CALLBACK* pfn_free_func)(cl_command_queue queue,
+                                                   cl_uint num_svm_pointers,
+                                                   void* svm_pointers[],
+                                                   void* user_data),
+                 void* user_data,
+                 cl_uint num_events_in_wait_list,
+                 const cl_event* event_wait_list,
+                 cl_event* event) CL_API_SUFFIX__VERSION_2_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueSVMMemcpy(cl_command_queue command_queue,
+                   cl_bool blocking_copy,
+                   void* dst_ptr,
+                   const void* src_ptr,
+                   size_t size,
+                   cl_uint num_events_in_wait_list,
+                   const cl_event* event_wait_list,
+                   cl_event* event) CL_API_SUFFIX__VERSION_2_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueSVMMemFill(cl_command_queue command_queue,
+                    void* svm_ptr,
+                    const void* pattern,
+                    size_t pattern_size,
+                    size_t size,
+                    cl_uint num_events_in_wait_list,
+                    const cl_event* event_wait_list,
+                    cl_event* event) CL_API_SUFFIX__VERSION_2_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueSVMMap(cl_command_queue command_queue,
+                cl_bool blocking_map,
+                cl_map_flags flags,
+                void* svm_ptr,
+                size_t size,
+                cl_uint num_events_in_wait_list,
+                const cl_event* event_wait_list,
+                cl_event* event) CL_API_SUFFIX__VERSION_2_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueSVMUnmap(cl_command_queue command_queue,
+                  void* svm_ptr,
+                  cl_uint num_events_in_wait_list,
+                  const cl_event* event_wait_list,
+                  cl_event* event) CL_API_SUFFIX__VERSION_2_0 {
+    return CL_INVALID_OPERATION;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clEnqueueSVMMigrateMem(cl_command_queue command_queue,
+                       cl_uint num_svm_pointers,
+                       const void** svm_pointers,
+                       const size_t* sizes,
+                       cl_mem_migration_flags flags,
+                       cl_uint num_events_in_wait_list,
+                       const cl_event* event_wait_list,
+                       cl_event* event) CL_API_SUFFIX__VERSION_2_1 {
+    return CL_INVALID_OPERATION;
+}

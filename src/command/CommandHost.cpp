@@ -40,4 +40,28 @@ void Command<CommandBase::Type::host>::append(
 void Command<CommandBase::Type::host>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeImage)>) {}
 
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::mapImage)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::unmapMemObject)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::migrateMemObjects)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmFree)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMemcpy)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMap)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmUnmap)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMigrateMem)>) {}
+
 }

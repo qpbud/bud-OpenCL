@@ -27,4 +27,19 @@ void Command<CommandBase::Type::device>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::fillBuffer)>,
     Memory<MemoryBase::Type::buffer>& buffer, const void* pattern, size_t patternSize, size_t offset, size_t size) {}
 
+void Command<CommandBase::Type::device>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::copyImage)>) {}
+
+void Command<CommandBase::Type::device>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::fillImage)>) {}
+
+void Command<CommandBase::Type::device>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::copyImageToBuffer)>) {}
+
+void Command<CommandBase::Type::device>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::copyBufferToImage)>) {}
+
+void Command<CommandBase::Type::device>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMemFill)>) {}
+
 }
