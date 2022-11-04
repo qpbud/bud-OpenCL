@@ -13,6 +13,8 @@ public:
     std::unique_ptr<detail::Image> createImage() override;
     std::unique_ptr<detail::Pipe> createPipe() override;
     std::unique_ptr<detail::Sampler> createSampler() override;
+    std::unique_ptr<detail::Program> createProgram() override;
+    std::unique_ptr<detail::Kernel> createKernel() override;
 };
 
 }

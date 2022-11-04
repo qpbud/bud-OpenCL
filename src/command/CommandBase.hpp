@@ -38,6 +38,12 @@ public:
         svmMap,
         svmUnmap,
         svmMigrateMem,
+        ndrangeKernel,
+        task,
+        nativeKernel,
+        markerWithWaitList,
+        marker,
+        barrier,
     };
 
     template<cl_command_type commandType, typename Enable = void> struct TypeMap {};
@@ -80,5 +86,10 @@ COMMAND_TRAITS(CL_COMMAND_SVM_MEMFILL, device, svmMemFill)
 COMMAND_TRAITS(CL_COMMAND_SVM_MAP, host, svmMap)
 COMMAND_TRAITS(CL_COMMAND_SVM_UNMAP, host, svmUnmap)
 COMMAND_TRAITS(CL_COMMAND_SVM_MIGRATE_MEM, host, svmMigrateMem)
+COMMAND_TRAITS(CL_COMMAND_NDRANGE_KERNEL, device, ndrangeKernel)
+COMMAND_TRAITS(CL_COMMAND_TASK, device, task)
+COMMAND_TRAITS(CL_COMMAND_NATIVE_KERNEL, host, nativeKernel)
+COMMAND_TRAITS(CL_COMMAND_MARKER, host, marker)
+COMMAND_TRAITS(CL_COMMAND_BARRIER, host, barrier)
 
 }

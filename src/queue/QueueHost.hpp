@@ -45,6 +45,9 @@ public:
             m_deviceCommandList.push_back(std::move(command));
         }
     }
+
+    void flush();
+    void finish();
 };
 
 }

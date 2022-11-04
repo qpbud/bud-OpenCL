@@ -30,6 +30,8 @@ class Command<CommandBase::Type::device> : public CommandBase, public H1D1<detai
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::copyImageToBuffer)>);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::copyBufferToImage)>);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMemFill)>);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::ndrangeKernel)>);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::task)>);
 public:
     Command(Context& context, Device& device);
 

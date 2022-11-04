@@ -14,6 +14,8 @@ enum class ObjectMagic {
     memory = 0x7,
     event = 0x11,
     sampler = 0x12,
+    program = 0x14,
+    kernel = 0x16,
     invalid = 0xffff,
 };
 
@@ -40,6 +42,8 @@ struct _cl_command_queue: public qp::cl::ObjectBase<qp::cl::ObjectMagic::queue> 
 struct _cl_mem: public qp::cl::ObjectBase<qp::cl::ObjectMagic::memory> {};
 struct _cl_event: public qp::cl::ObjectBase<qp::cl::ObjectMagic::event> {};
 struct _cl_sampler: public qp::cl::ObjectBase<qp::cl::ObjectMagic::sampler> {};
+struct _cl_program: public qp::cl::ObjectBase<qp::cl::ObjectMagic::program> {};
+struct _cl_kernel: public qp::cl::ObjectBase<qp::cl::ObjectMagic::kernel> {};
 
 namespace qp::cl {
 
@@ -55,7 +59,9 @@ class Object<T, std::enable_if_t<std::is_same_v<T, _cl_context> ||
                                  std::is_same_v<T, _cl_command_queue> ||
                                  std::is_same_v<T, _cl_mem> ||
                                  std::is_same_v<T, _cl_event> ||
-                                 std::is_same_v<T, _cl_sampler>>> : public T, public boost::intrusive_ref_counter<Object<T>> {
+                                 std::is_same_v<T, _cl_sampler> ||
+                                 std::is_same_v<T, _cl_program> ||
+                                 std::is_same_v<T, _cl_kernel>>> : public T, public boost::intrusive_ref_counter<Object<T>> {
 public:
     Object()
         : T()

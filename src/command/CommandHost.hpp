@@ -35,6 +35,9 @@ class Command<CommandBase::Type::host> : public CommandBase {
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMap)>);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmUnmap)>);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMigrateMem)>);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::nativeKernel)>);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::marker)>);
+    void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::barrier)>);
 public:
     Command();
 

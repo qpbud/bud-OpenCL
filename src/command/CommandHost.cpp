@@ -64,4 +64,13 @@ void Command<CommandBase::Type::host>::append(
 void Command<CommandBase::Type::host>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMigrateMem)>) {}
 
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::nativeKernel)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::marker)>) {}
+
+void Command<CommandBase::Type::host>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::barrier)>) {}
+
 }
