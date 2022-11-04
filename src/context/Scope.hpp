@@ -21,7 +21,7 @@ public:
         return m_context.get() == &context;
     }
 
-    Context& getContext() {
+    Context& getContext() const {
         return *m_context;
     }
 };

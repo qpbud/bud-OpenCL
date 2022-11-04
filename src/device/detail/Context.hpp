@@ -8,6 +8,8 @@
 #include "device/detail/Image.hpp"
 #include "device/detail/Pipe.hpp"
 #include "device/detail/Sampler.hpp"
+#include "device/detail/Program.hpp"
+#include "device/detail/Kernel.hpp"
 
 namespace qp::cl::detail {
 
@@ -22,6 +24,8 @@ public:
     virtual std::unique_ptr<Image> createImage() = 0;
     virtual std::unique_ptr<Pipe> createPipe() = 0;
     virtual std::unique_ptr<Sampler> createSampler() = 0;
+    virtual std::unique_ptr<Program> createProgram() = 0;
+    virtual std::unique_ptr<Kernel> createKernel() = 0;
 };
 
 }

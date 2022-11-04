@@ -11,6 +11,8 @@
 #include "device/detail/Image.hpp"
 #include "device/detail/Pipe.hpp"
 #include "device/detail/Sampler.hpp"
+#include "device/detail/Program.hpp"
+#include "device/detail/Kernel.hpp"
 
 namespace qp::cl::detail {
 
@@ -38,6 +40,12 @@ class Device {
     }
     std::unique_ptr<Sampler> createSampler(Context& context) {
         return context.createSampler();
+    }
+    std::unique_ptr<Program> createProgram(Context& context) {
+        return context.createProgram();
+    }
+    std::unique_ptr<Kernel> createKernel(Context& context) {
+        return context.createKernel();
     }
 public:
     template<typename Detail> struct Creator {
@@ -95,5 +103,7 @@ GENERATE_CREATOR(Event)
 GENERATE_CREATOR(Image)
 GENERATE_CREATOR(Pipe)
 GENERATE_CREATOR(Sampler)
+GENERATE_CREATOR(Program)
+GENERATE_CREATOR(Kernel)
 
 }

@@ -42,4 +42,10 @@ void Command<CommandBase::Type::device>::append(
 void Command<CommandBase::Type::device>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::svmMemFill)>) {}
 
+void Command<CommandBase::Type::device>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::ndrangeKernel)>) {}
+
+void Command<CommandBase::Type::device>::append(
+    std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::task)>) {}
+
 }

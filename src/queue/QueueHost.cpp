@@ -14,4 +14,8 @@ Queue<QueueBase::Type::host>::Queue(Context& context,
     , m_deviceCommandList() {
 }
 
+void Queue<QueueBase::Type::host>::flush() {}
+
+void Queue<QueueBase::Type::host>::finish() {}
+
 }

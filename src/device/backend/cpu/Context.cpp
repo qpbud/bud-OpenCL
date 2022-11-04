@@ -6,7 +6,8 @@
 #include "device/backend/cpu/Image.hpp"
 #include "device/backend/cpu/Pipe.hpp"
 #include "device/backend/cpu/Sampler.hpp"
-
+#include "device/backend/cpu/Program.hpp"
+#include "device/backend/cpu/Kernel.hpp"
 
 namespace qp::cl::backend::cpu {
 
@@ -36,6 +37,14 @@ std::unique_ptr<detail::Pipe> Context::createPipe() {
 
 std::unique_ptr<detail::Sampler> Context::createSampler() {
     return std::make_unique<Sampler>();
+}
+
+std::unique_ptr<detail::Program> Context::createProgram() {
+    return std::make_unique<Program>();
+}
+
+std::unique_ptr<detail::Kernel> Context::createKernel() {
+    return std::make_unique<Kernel>();
 }
 
 }

@@ -231,3 +231,51 @@ clSetCommandQueueProperty(cl_command_queue command_queue,
                           cl_command_queue_properties* old_properties) CL_API_SUFFIX__VERSION_1_0_DEPRECATED {
     return CL_INVALID_OPERATION;
 }
+
+CL_API_ENTRY cl_int CL_API_CALL
+clFlush(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!command_queue || !command_queue->isValid()) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        if (queueBaseInternal.type() != qp::cl::QueueBase::Type::host) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        queueHostInternal.flush();
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
+
+CL_API_ENTRY cl_int CL_API_CALL
+clFinish(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
+    try {
+        if (!command_queue || !command_queue->isValid()) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        if (queueBaseInternal.type() != qp::cl::QueueBase::Type::host) {
+            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        }
+
+        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        queueHostInternal.finish();
+    } catch (const std::exception& e) {
+        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            return except->err();
+        }
+        return CL_OUT_OF_HOST_MEMORY;
+    }
+
+    return CL_SUCCESS;
+}
