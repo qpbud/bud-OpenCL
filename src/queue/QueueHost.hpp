@@ -3,6 +3,7 @@
 #include <vector>
 #include <type_traits>
 #include <memory>
+#include <list>
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 #include "device/H2D.hpp"
 #include "queue/QueueBase.hpp"
@@ -36,9 +37,9 @@ public:
         } else {
             command = std::make_unique<CommandType>(*m_context, m_device);
         }
-        command->append<CommandBase::Category::waitEvents>(std::move(waitList));
-        command->append<CommandBase::TypeMap<type>::value>(std::forward<Args>(args)...);
-        command->append<CommandBase::Category::setEvent>(std::move(toSetEvent));
+        command->template append<CommandBase::Category::waitEvents>(std::move(waitList));
+        command->template append<CommandBase::TypeMap<type>::value>(std::forward<Args>(args)...);
+        command->template append<CommandBase::Category::setEvent>(std::move(toSetEvent));
         if constexpr (std::is_same_v<CommandType, Command<CommandBase::Type::host>>) {
             m_hostCommandList.push_back(std::move(command));
         } else {
