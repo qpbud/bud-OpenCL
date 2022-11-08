@@ -80,7 +80,7 @@ public:
     }
 
     cl_uint count() const {
-        return static_cast<cl_uint>(use_count());
+        return static_cast<cl_uint>(this->use_count());
     }
 };
 

@@ -1,3 +1,4 @@
+#include <cstring>
 #include "sampler/Sampler.hpp"
 
 namespace qp::cl {
