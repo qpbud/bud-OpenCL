@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <common/Khronos.hpp>
 
-namespace qp::cl {
+namespace bud::cl {
 
 class Except : public std::exception {
     static const std::unordered_map<cl_int, const char*> s_err2Str;

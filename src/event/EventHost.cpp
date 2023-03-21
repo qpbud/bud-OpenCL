@@ -1,6 +1,6 @@
 #include "event/EventHost.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Event<EventBase::Type::host>::Event(Context& context)
     : EventBase(context, EventBase::Type::host) {

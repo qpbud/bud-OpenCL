@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Program.hpp"
+#include "device/hal/Program.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace bud::cl::backend::vulkan {
 
-class Program : public detail::Program {};
+class Program : public hal::Program {};
 
 }

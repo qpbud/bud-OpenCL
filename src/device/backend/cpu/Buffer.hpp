@@ -1,9 +1,17 @@
 #pragma once
 
-#include "device/detail/Buffer.hpp"
+#include "device/hal/Buffer.hpp"
 
-namespace qp::cl::backend::cpu {
+namespace bud::cl::backend::cpu {
 
-class Buffer : public detail::Buffer {};
+class Buffer : public hal::Buffer {
+    void* m_data;
+public:
+    Buffer(bool isImport, void* hostPtr, size_t size);
+    ~Buffer();
+    cl_int read(size_t offset, size_t size, void* ptr) override;
+    cl_int write(size_t offset, size_t size, const void* ptr) override;
+    void* data();
+};
 
 }

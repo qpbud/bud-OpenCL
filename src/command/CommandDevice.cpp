@@ -1,10 +1,10 @@
 #include "command/CommandDevice.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Command<CommandBase::Type::device>::Command(Context& context, Device& device)
     : CommandBase(CommandBase::Type::device)
-    , H1D1<detail::Command>(device, context[device]) {
+    , H1D1<hal::Command>(device, context[device]) {
 }
 
 void Command<CommandBase::Type::device>::append(
@@ -17,7 +17,9 @@ void Command<CommandBase::Type::device>::append(
 
 void Command<CommandBase::Type::device>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::copyBuffer)>,
-    Memory<MemoryBase::Type::buffer>& srcBuffer, Memory<MemoryBase::Type::buffer>& dstBuffer, const CopyRegion& copyRegion) {}
+    Memory<MemoryBase::Type::buffer>& srcBuffer, Memory<MemoryBase::Type::buffer>& dstBuffer, const CopyRegion& copyRegion) {
+    static_cast<hal::Command&>(*this).copyBuffer(srcBuffer[m_device], dstBuffer[m_device], copyRegion);
+}
 
 void Command<CommandBase::Type::device>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::copyBufferRect)>,

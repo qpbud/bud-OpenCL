@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Sampler.hpp"
+#include "device/hal/Sampler.hpp"
 
-namespace qp::cl::backend::cpu {
+namespace bud::cl::backend::cpu {
 
-class Sampler : public detail::Sampler {};
+class Sampler : public hal::Sampler {};
 
 }

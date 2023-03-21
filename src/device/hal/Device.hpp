@@ -3,18 +3,18 @@
 #include <memory>
 #include "common/Khronos.hpp"
 #include "common/Except.hpp"
-#include "device/detail/Context.hpp"
-#include "device/detail/HostQueue.hpp"
-#include "device/detail/Buffer.hpp"
-#include "device/detail/Command.hpp"
-#include "device/detail/Event.hpp"
-#include "device/detail/Image.hpp"
-#include "device/detail/Pipe.hpp"
-#include "device/detail/Sampler.hpp"
-#include "device/detail/Program.hpp"
-#include "device/detail/Kernel.hpp"
+#include "device/hal/Context.hpp"
+#include "device/hal/HostQueue.hpp"
+#include "device/hal/Buffer.hpp"
+#include "device/hal/Command.hpp"
+#include "device/hal/Event.hpp"
+#include "device/hal/Image.hpp"
+#include "device/hal/Pipe.hpp"
+#include "device/hal/Sampler.hpp"
+#include "device/hal/Program.hpp"
+#include "device/hal/Kernel.hpp"
 
-namespace qp::cl::detail {
+namespace bud::cl::hal {
 
 class Device {
     cl_device_type m_type;
@@ -23,8 +23,8 @@ class Device {
     std::unique_ptr<HostQueue> createHostQueue(Context& context) {
         return context.createHostQueue();
     }
-    std::unique_ptr<Buffer> createBuffer(Context& context) {
-        return context.createBuffer();
+    std::unique_ptr<Buffer> createBuffer(Context& context, bool isImport, void* hostPtr, size_t size) {
+        return context.createBuffer(isImport, hostPtr, size);
     }
     std::unique_ptr<Command> createCommand(Context& context) {
         return context.createCommand();
@@ -48,8 +48,8 @@ class Device {
         return context.createKernel();
     }
 public:
-    template<typename Detail> struct Creator {
-        template<typename ... Args> std::unique_ptr<Detail> operator()(Device& device, Args&&... args);
+    template<typename Hal> struct Creator {
+        template<typename ... Args> std::unique_ptr<Hal> operator()(Device& device, Args&&... args);
     };
 
     Device(cl_device_type type)
@@ -86,13 +86,13 @@ public:
     }
 };
 
-#define CREATE_FUNCTION(Detail) create##Detail
+#define CREATE_FUNCTION(Hal) create##Hal
 
-#define GENERATE_CREATOR(Detail) \
+#define GENERATE_CREATOR(Hal) \
     template<> \
     template<typename ... Args> \
-    std::unique_ptr<Detail> Device::Creator<Detail>::operator()(Device& device, Args&&... args) { \
-        return device.CREATE_FUNCTION(Detail)(std::forward<Args>(args)...); \
+    std::unique_ptr<Hal> Device::Creator<Hal>::operator()(Device& device, Args&&... args) { \
+        return device.CREATE_FUNCTION(Hal)(std::forward<Args>(args)...); \
     }
 
 GENERATE_CREATOR(Context)

@@ -4,7 +4,9 @@ set(PLATFORM_SOURCE platform/Entries.cpp
                     platform/Platform.cpp)
 set(DEVICE_SOURCE device/Entries.cpp
                   device/Device.cpp)
-set(CPU_BACKEND_SOURCE device/backend/cpu/Device.cpp
+set(CPU_BACKEND_SOURCE device/backend/cpu/Buffer.cpp
+                       device/backend/cpu/Command.cpp
+                       device/backend/cpu/Device.cpp
                        device/backend/cpu/Context.cpp)
 set(VULKAN_BACKEND_SOURCE device/backend/vulkan/Device.cpp
                           device/backend/vulkan/Context.cpp)
@@ -33,7 +35,7 @@ set(PROGRAM_SOURCE program/Entries.cpp
 set(KERNEL_SOURCE kernel/Entries.cpp
                   kernel/Kernel.cpp)
 
-add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
+add_library(OpenCL_BUD SHARED ${PLATFORM_SOURCE}
                              ${DEVICE_SOURCE}
                              ${CPU_BACKEND_SOURCE}
                              ${VULKAN_BACKEND_SOURCE}
@@ -45,12 +47,12 @@ add_library(OpenCL_QP SHARED ${PLATFORM_SOURCE}
                              ${SAMPLER_SOURCE}
                              ${PROGRAM_SOURCE}
                              ${KERNEL_SOURCE})
-target_include_directories(OpenCL_QP PRIVATE ${CMAKE_SOURCE_DIR}/third_party/OpenCL-Headers
+target_include_directories(OpenCL_BUD PRIVATE ${CMAKE_SOURCE_DIR}/third_party/OpenCL-Headers
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/config/include
                                              ${CMAKE_SOURCE_DIR}/third_party/boost/libs/assert/include
                                              ${CMAKE_SOURCE_DIR}/src)
-target_compile_definitions(OpenCL_QP PRIVATE CL_TARGET_OPENCL_VERSION=300
+target_compile_definitions(OpenCL_BUD PRIVATE CL_TARGET_OPENCL_VERSION=300
                                              CL_USE_DEPRECATED_OPENCL_1_0_APIS
                                              CL_USE_DEPRECATED_OPENCL_1_1_APIS
                                              CL_USE_DEPRECATED_OPENCL_1_2_APIS

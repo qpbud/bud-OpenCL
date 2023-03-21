@@ -1,10 +1,10 @@
 #include "event/EventDevice.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Event<EventBase::Type::device>::Event(Context& context, Device& device)
     : EventBase(context, EventBase::Type::device)
-    , H1D1<detail::Event>(device, context[device]) {
+    , H1D1<hal::Event>(device, context[device]) {
 }
 
 void Event<EventBase::Type::device>::hostWait() {}

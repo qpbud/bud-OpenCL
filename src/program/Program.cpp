@@ -1,12 +1,12 @@
 #include "program/Program.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Program::Program(Context& context,
                  std::vector<std::string>&& sources)
     : Object<_cl_program>()
     , Scope(context)
-    , H1DN<detail::Program>()
+    , H1DN<hal::Program>()
     , m_sources(std::move(sources))
     , m_il()
     , m_devices()
@@ -21,7 +21,7 @@ Program::Program(Context& context,
                  std::vector<unsigned char>&& il)
     : Object<_cl_program>()
     , Scope(context)
-    , H1DN<detail::Program>()
+    , H1DN<hal::Program>()
     , m_sources()
     , m_il(std::move(il))
     , m_devices()
@@ -44,7 +44,7 @@ Program::Program(Context& context,
                  std::vector<std::vector<unsigned char>>&& binaries)
     : Object<_cl_program>()
     , Scope(context)
-    , H1DN<detail::Program>()
+    , H1DN<hal::Program>()
     , m_sources()
     , m_il()
     , m_devices(std::move(devices))

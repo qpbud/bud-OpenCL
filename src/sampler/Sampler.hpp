@@ -8,9 +8,9 @@
 #include "context/Context.hpp"
 #include "context/Scope.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
-class Sampler : public Object<_cl_sampler>, public Scope, public H1DN<detail::Sampler> {
+class Sampler : public Object<_cl_sampler>, public Scope, public H1DN<hal::Sampler> {
     std::vector<cl_sampler_properties> m_properties;
     cl_bool m_normalizedCoords;
     cl_addressing_mode m_addressingMode;

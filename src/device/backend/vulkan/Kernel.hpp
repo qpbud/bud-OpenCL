@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Kernel.hpp"
+#include "device/hal/Kernel.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace bud::cl::backend::vulkan {
 
-class Kernel : public detail::Kernel {};
+class Kernel : public hal::Kernel {};
 
 }

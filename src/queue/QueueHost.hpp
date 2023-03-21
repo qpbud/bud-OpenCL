@@ -12,10 +12,10 @@
 #include "command/CommandDevice.hpp"
 #include "event/EventBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<>
-class Queue<QueueBase::Type::host> : public QueueBase, public H1D1<detail::HostQueue> {
+class Queue<QueueBase::Type::host> : public QueueBase, public H1D1<hal::HostQueue> {
     bool m_enableProfiling;
     std::list<std::unique_ptr<Command<CommandBase::Type::host>>> m_hostCommandList;
     std::list<std::unique_ptr<Command<CommandBase::Type::device>>> m_deviceCommandList;
@@ -33,7 +33,7 @@ public:
         using CommandType = typename CommandBase::TypeMap<type>::type;
         std::unique_ptr<CommandType> command;
         if constexpr (std::is_same_v<CommandType, Command<CommandBase::Type::host>>) {
-            command = std::make_unique<CommandType>();
+            command = std::make_unique<CommandType>(m_device);
         } else {
             command = std::make_unique<CommandType>(*m_context, m_device);
         }

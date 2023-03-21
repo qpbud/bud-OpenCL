@@ -1,6 +1,6 @@
 #include "event/EventBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 EventBase::EventBase(Context& context,
                      EventBase::Type type)

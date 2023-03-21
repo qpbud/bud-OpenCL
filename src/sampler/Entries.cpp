@@ -10,7 +10,7 @@ clCreateSamplerWithProperties(cl_context context,
                               cl_int* errcode_ret) CL_API_SUFFIX__VERSION_2_0 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         std::vector<cl_sampler_properties> propertiesVec;
@@ -30,7 +30,7 @@ clCreateSamplerWithProperties(cl_context context,
                         filterMode = *(sampler_properties + 1);
                         break;
                     default:
-                        throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+                        throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
                 }
                 propertiesVec.push_back(*sampler_properties);
                 propertiesVec.push_back(*(sampler_properties + 1));
@@ -39,8 +39,8 @@ clCreateSamplerWithProperties(cl_context context,
             propertiesVec.push_back(0);
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        cl_sampler sampler = &contextInternal.create<qp::cl::Sampler>(std::move(propertiesVec), normalizedCoords, addressingMode, filterMode);
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
+        cl_sampler sampler = &contextInternal.create<bud::cl::Sampler>(std::move(propertiesVec), normalizedCoords, addressingMode, filterMode);
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -48,7 +48,7 @@ clCreateSamplerWithProperties(cl_context context,
         return sampler;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -66,11 +66,11 @@ clCreateSampler(cl_context context,
                 cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_2_DEPRECATED {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        cl_sampler sampler = &contextInternal.create<qp::cl::Sampler>(std::vector<cl_sampler_properties>(), normalized_coords, addressing_mode, filter_mode);
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
+        cl_sampler sampler = &contextInternal.create<bud::cl::Sampler>(std::vector<cl_sampler_properties>(), normalized_coords, addressing_mode, filter_mode);
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -78,7 +78,7 @@ clCreateSampler(cl_context context,
         return sampler;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -92,13 +92,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clRetainSampler(cl_sampler sampler) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!sampler || !sampler->isValid()) {
-            throw qp::cl::Except(CL_INVALID_SAMPLER);
+            throw bud::cl::Except(CL_INVALID_SAMPLER);
         }
 
-        auto& samplerInternal = static_cast<qp::cl::Sampler&>(*sampler);
+        auto& samplerInternal = static_cast<bud::cl::Sampler&>(*sampler);
         samplerInternal.retain();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -111,13 +111,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clReleaseSampler(cl_sampler sampler) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!sampler || !sampler->isValid()) {
-            throw qp::cl::Except(CL_INVALID_SAMPLER);
+            throw bud::cl::Except(CL_INVALID_SAMPLER);
         }
 
-        auto& samplerInternal = static_cast<qp::cl::Sampler&>(*sampler);
+        auto& samplerInternal = static_cast<bud::cl::Sampler&>(*sampler);
         samplerInternal.release();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -134,10 +134,10 @@ clGetSamplerInfo(cl_sampler sampler,
                  size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!sampler || !sampler->isValid()) {
-            throw qp::cl::Except(CL_INVALID_SAMPLER);
+            throw bud::cl::Except(CL_INVALID_SAMPLER);
         }
 
-        auto& samplerInternal = static_cast<qp::cl::Sampler&>(*sampler);
+        auto& samplerInternal = static_cast<bud::cl::Sampler&>(*sampler);
 
         if (param_value) {
             samplerInternal.getInfo(param_name, param_value_size, param_value);
@@ -146,7 +146,7 @@ clGetSamplerInfo(cl_sampler sampler,
             *param_value_size_ret = samplerInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;

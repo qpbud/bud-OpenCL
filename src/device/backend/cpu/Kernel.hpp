@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Kernel.hpp"
+#include "device/hal/Kernel.hpp"
 
-namespace qp::cl::backend::cpu {
+namespace bud::cl::backend::cpu {
 
-class Kernel : public detail::Kernel {};
+class Kernel : public hal::Kernel {};
 
 }

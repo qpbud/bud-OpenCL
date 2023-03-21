@@ -4,10 +4,10 @@
 #include "device/H2D.hpp"
 #include "memory/MemoryBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<>
-class Memory<MemoryBase::Type::image> : public MemoryBase, public H1DN<detail::Image> {
+class Memory<MemoryBase::Type::image> : public MemoryBase, public H1DN<hal::Image> {
 public:
     Memory(Context& context,
            std::vector<cl_mem_properties>&& properties,

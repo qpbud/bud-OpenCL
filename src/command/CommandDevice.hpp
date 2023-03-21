@@ -11,10 +11,10 @@
 #include "command/CommandBase.hpp"
 #include "event/EventBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<>
-class Command<CommandBase::Type::device> : public CommandBase, public H1D1<detail::Command> {
+class Command<CommandBase::Type::device> : public CommandBase, public H1D1<hal::Command> {
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::waitEvents)>,
                 std::vector<boost::intrusive_ptr<EventBase>>&& events);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::setEvent)>,

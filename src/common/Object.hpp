@@ -3,8 +3,9 @@
 #include <type_traits>
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 #include "common/Khronos.hpp"
+#include "common/Icd.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 enum class ObjectMagic {
     platform = 0x1,
@@ -21,7 +22,7 @@ enum class ObjectMagic {
 
 template<ObjectMagic m>
 struct ObjectBase {
-    cl_icd_dispatch* icd = nullptr;
+    cl_icd_dispatch* icd = getIcdDispatch();
     ObjectMagic magic = m;
 
     ~ObjectBase() {
@@ -35,17 +36,17 @@ struct ObjectBase {
 
 }
 
-struct _cl_platform_id : public qp::cl::ObjectBase<qp::cl::ObjectMagic::platform> {};
-struct _cl_device_id : public qp::cl::ObjectBase<qp::cl::ObjectMagic::device> {};
-struct _cl_context : public qp::cl::ObjectBase<qp::cl::ObjectMagic::context> {};
-struct _cl_command_queue: public qp::cl::ObjectBase<qp::cl::ObjectMagic::queue> {};
-struct _cl_mem: public qp::cl::ObjectBase<qp::cl::ObjectMagic::memory> {};
-struct _cl_event: public qp::cl::ObjectBase<qp::cl::ObjectMagic::event> {};
-struct _cl_sampler: public qp::cl::ObjectBase<qp::cl::ObjectMagic::sampler> {};
-struct _cl_program: public qp::cl::ObjectBase<qp::cl::ObjectMagic::program> {};
-struct _cl_kernel: public qp::cl::ObjectBase<qp::cl::ObjectMagic::kernel> {};
+struct _cl_platform_id : public bud::cl::ObjectBase<bud::cl::ObjectMagic::platform> {};
+struct _cl_device_id : public bud::cl::ObjectBase<bud::cl::ObjectMagic::device> {};
+struct _cl_context : public bud::cl::ObjectBase<bud::cl::ObjectMagic::context> {};
+struct _cl_command_queue: public bud::cl::ObjectBase<bud::cl::ObjectMagic::queue> {};
+struct _cl_mem: public bud::cl::ObjectBase<bud::cl::ObjectMagic::memory> {};
+struct _cl_event: public bud::cl::ObjectBase<bud::cl::ObjectMagic::event> {};
+struct _cl_sampler: public bud::cl::ObjectBase<bud::cl::ObjectMagic::sampler> {};
+struct _cl_program: public bud::cl::ObjectBase<bud::cl::ObjectMagic::program> {};
+struct _cl_kernel: public bud::cl::ObjectBase<bud::cl::ObjectMagic::kernel> {};
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<typename T, typename Enable = void> class Object {};
 

@@ -1,6 +1,6 @@
 #include "command/CommandBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 CommandBase::CommandBase(CommandBase::Type type)
     : m_type(type) {}

@@ -1,20 +1,20 @@
 #pragma once
 
-#include "device/detail/Context.hpp"
+#include "device/hal/Context.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace bud::cl::backend::vulkan {
 
-class Context : public detail::Context {
+class Context : public hal::Context {
 public:
-    std::unique_ptr<detail::HostQueue> createHostQueue() override;
-    std::unique_ptr<detail::Buffer> createBuffer() override;
-    std::unique_ptr<detail::Command> createCommand() override;
-    std::unique_ptr<detail::Event> createEvent() override;
-    std::unique_ptr<detail::Image> createImage() override;
-    std::unique_ptr<detail::Pipe> createPipe() override;
-    std::unique_ptr<detail::Sampler> createSampler() override;
-    std::unique_ptr<detail::Program> createProgram() override;
-    std::unique_ptr<detail::Kernel> createKernel() override;
+    std::unique_ptr<hal::HostQueue> createHostQueue() override;
+    std::unique_ptr<hal::Buffer> createBuffer(bool isImport, void* hostPtr, size_t size) override;
+    std::unique_ptr<hal::Command> createCommand() override;
+    std::unique_ptr<hal::Event> createEvent() override;
+    std::unique_ptr<hal::Image> createImage() override;
+    std::unique_ptr<hal::Pipe> createPipe() override;
+    std::unique_ptr<hal::Sampler> createSampler() override;
+    std::unique_ptr<hal::Program> createProgram() override;
+    std::unique_ptr<hal::Kernel> createKernel() override;
 };
 
 }

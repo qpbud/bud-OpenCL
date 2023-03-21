@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Image.hpp"
+#include "device/hal/Image.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace bud::cl::backend::vulkan {
 
-class Image : public detail::Image {};
+class Image : public hal::Image {};
 
 }

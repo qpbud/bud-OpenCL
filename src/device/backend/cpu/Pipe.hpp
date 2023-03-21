@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Pipe.hpp"
+#include "device/hal/Pipe.hpp"
 
-namespace qp::cl::backend::cpu {
+namespace bud::cl::backend::cpu {
 
-class Pipe : public detail::Pipe {};
+class Pipe : public hal::Pipe {};
 
 }

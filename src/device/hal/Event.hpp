@@ -1,6 +1,6 @@
 #pragma once
 
-namespace qp::cl::detail {
+namespace bud::cl::hal {
 
 class Event {
 public:

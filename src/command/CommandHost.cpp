@@ -1,9 +1,11 @@
 #include "command/CommandHost.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
-Command<CommandBase::Type::host>::Command()
-    : CommandBase(CommandBase::Type::host) {
+Command<CommandBase::Type::host>::Command(Device& device)
+    : CommandBase(CommandBase::Type::host)
+    , m_device(device)
+    , m_chain() {
 }
 
 void Command<CommandBase::Type::host>::append(
@@ -16,11 +18,19 @@ void Command<CommandBase::Type::host>::append(
 
 void Command<CommandBase::Type::host>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::readBuffer)>,
-    Memory<MemoryBase::Type::buffer>& buffer, size_t offset, size_t size, void* ptr) {}
+    Memory<MemoryBase::Type::buffer>& buffer, size_t offset, size_t size, void* ptr) {
+    m_chain.chainInPlace([this, &buffer, offset, size, ptr](cl_int errcode) -> cl_int {
+        return buffer[m_device].read(offset, size, ptr);
+    });
+}
 
 void Command<CommandBase::Type::host>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::writeBuffer)>,
-    Memory<MemoryBase::Type::buffer>& buffer, size_t offset, size_t size, const void* ptr) {}
+    Memory<MemoryBase::Type::buffer>& buffer, size_t offset, size_t size, const void* ptr) {
+    m_chain.chainInPlace([this, &buffer, offset, size, ptr](cl_int errcode) -> cl_int {
+        return buffer[m_device].write(offset, size, ptr);
+    });
+}
 
 void Command<CommandBase::Type::host>::append(
     std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::readBufferRect)>,

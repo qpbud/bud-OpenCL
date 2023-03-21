@@ -8,9 +8,9 @@
 #include "device/Device.hpp"
 #include "device/H2D.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
-class Context : public Object<_cl_context>, public H1DN<detail::Context> {
+class Context : public Object<_cl_context>, public H1DN<hal::Context> {
     std::vector<cl_context_properties> m_properties;
     std::vector<cl_device_id> m_devices;
     std::function<void(const char*, const void*, size_t)> m_notify;

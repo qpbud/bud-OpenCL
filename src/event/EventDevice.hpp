@@ -4,10 +4,10 @@
 #include "device/H2D.hpp"
 #include "event/EventBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<>
-class Event<EventBase::Type::device> : public EventBase, public H1D1<detail::Event> {
+class Event<EventBase::Type::device> : public EventBase, public H1D1<hal::Event> {
 public:
     Event(Context& context, Device& device);
 

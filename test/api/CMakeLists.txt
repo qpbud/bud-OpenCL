@@ -10,7 +10,7 @@ target_include_directories(ApiTest PRIVATE ${CMAKE_SOURCE_DIR}/third_party/googl
                                            ${CMAKE_SOURCE_DIR}/third_party/OpenCL-Headers)
 target_link_libraries(ApiTest PRIVATE $<TARGET_OBJECTS:gtest>
                                       $<TARGET_OBJECTS:gtest_main>
-                                      $<TARGET_OBJECTS:OpenCL_QP>)
+                                      $<TARGET_OBJECTS:OpenCL_BUD>)
 target_compile_definitions(ApiTest PRIVATE CL_TARGET_OPENCL_VERSION=300
                                            CL_USE_DEPRECATED_OPENCL_1_0_APIS
                                            CL_USE_DEPRECATED_OPENCL_1_1_APIS

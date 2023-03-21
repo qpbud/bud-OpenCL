@@ -10,11 +10,11 @@ clCreateUserEvent(cl_context context,
                   cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_1 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        cl_event event = &contextInternal.create<qp::cl::Event<qp::cl::EventBase::Type::host>>();
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
+        cl_event event = &contextInternal.create<bud::cl::Event<bud::cl::EventBase::Type::host>>();
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -22,7 +22,7 @@ clCreateUserEvent(cl_context context,
         return event;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -37,22 +37,22 @@ clSetUserEventStatus(cl_event event,
                      cl_int execution_status) CL_API_SUFFIX__VERSION_1_1 {
     try {
         if (!event || !event->isValid()) {
-            throw qp::cl::Except(CL_INVALID_EVENT);
+            throw bud::cl::Except(CL_INVALID_EVENT);
         }
 
-        auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event);
-        if (eventBaseInternal.type() != qp::cl::EventBase::Type::host) {
-            throw qp::cl::Except(CL_INVALID_EVENT);
+        auto& eventBaseInternal = static_cast<bud::cl::EventBase&>(*event);
+        if (eventBaseInternal.type() != bud::cl::EventBase::Type::host) {
+            throw bud::cl::Except(CL_INVALID_EVENT);
         }
 
         if (execution_status != CL_COMPLETE && !(execution_status < 0)) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
-        auto& eventHostInternal = static_cast<qp::cl::Event<qp::cl::EventBase::Type::host>&>(eventBaseInternal);
+        auto& eventHostInternal = static_cast<bud::cl::Event<bud::cl::EventBase::Type::host>&>(eventBaseInternal);
         eventHostInternal.setUserStatus(execution_status);
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -66,30 +66,30 @@ clWaitForEvents(cl_uint num_events,
                 const cl_event* event_list) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (num_events == 0 || !event_list) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
-        qp::cl::EventBase* toCompareEvent = nullptr;
+        bud::cl::EventBase* toCompareEvent = nullptr;
         for (cl_uint i = 0; i < num_events; i++) {
             if (!event_list[i] || !event_list[i]->isValid()) {
-                throw qp::cl::Except(CL_INVALID_EVENT);
+                throw bud::cl::Except(CL_INVALID_EVENT);
             }
-            auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event_list[i]);
+            auto& eventBaseInternal = static_cast<bud::cl::EventBase&>(*event_list[i]);
             if (!toCompareEvent) {
                 toCompareEvent = &eventBaseInternal;
             } else {
                 if (!toCompareEvent->canInterOp(eventBaseInternal)) {
-                    throw qp::cl::Except(CL_INVALID_CONTEXT);
+                    throw bud::cl::Except(CL_INVALID_CONTEXT);
                 }
             }
         }
 
         for (cl_uint i = 0; i < num_events; i++) {
-            auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event_list[i]);
+            auto& eventBaseInternal = static_cast<bud::cl::EventBase&>(*event_list[i]);
             eventBaseInternal.hostWait();
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -106,10 +106,10 @@ clGetEventInfo(cl_event event,
                size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!event || !event->isValid()) {
-            throw qp::cl::Except(CL_INVALID_EVENT);
+            throw bud::cl::Except(CL_INVALID_EVENT);
         }
 
-        auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event);
+        auto& eventBaseInternal = static_cast<bud::cl::EventBase&>(*event);
 
         if (param_value) {
             eventBaseInternal.getInfo(param_name, param_value_size, param_value);
@@ -118,7 +118,7 @@ clGetEventInfo(cl_event event,
             *param_value_size_ret = eventBaseInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -141,13 +141,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clRetainEvent(cl_event event) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!event || !event->isValid()) {
-            throw qp::cl::Except(CL_INVALID_EVENT);
+            throw bud::cl::Except(CL_INVALID_EVENT);
         }
 
-        auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event);
+        auto& eventBaseInternal = static_cast<bud::cl::EventBase&>(*event);
         eventBaseInternal.retain();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -160,13 +160,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clReleaseEvent(cl_event event) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!event || !event->isValid()) {
-            throw qp::cl::Except(CL_INVALID_EVENT);
+            throw bud::cl::Except(CL_INVALID_EVENT);
         }
 
-        auto& eventBaseInternal = static_cast<qp::cl::EventBase&>(*event);
+        auto& eventBaseInternal = static_cast<bud::cl::EventBase&>(*event);
         eventBaseInternal.release();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;

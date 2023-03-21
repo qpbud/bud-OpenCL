@@ -7,7 +7,7 @@
 #include "context/Context.hpp"
 #include "context/Scope.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 class QueueBase : public Object<_cl_command_queue>, public Scope {
 public:

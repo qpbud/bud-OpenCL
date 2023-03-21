@@ -1,24 +1,24 @@
 #pragma once
 
 #include <memory>
-#include "device/detail/HostQueue.hpp"
-#include "device/detail/Buffer.hpp"
-#include "device/detail/Command.hpp"
-#include "device/detail/Event.hpp"
-#include "device/detail/Image.hpp"
-#include "device/detail/Pipe.hpp"
-#include "device/detail/Sampler.hpp"
-#include "device/detail/Program.hpp"
-#include "device/detail/Kernel.hpp"
+#include "device/hal/HostQueue.hpp"
+#include "device/hal/Buffer.hpp"
+#include "device/hal/Command.hpp"
+#include "device/hal/Event.hpp"
+#include "device/hal/Image.hpp"
+#include "device/hal/Pipe.hpp"
+#include "device/hal/Sampler.hpp"
+#include "device/hal/Program.hpp"
+#include "device/hal/Kernel.hpp"
 
-namespace qp::cl::detail {
+namespace bud::cl::hal {
 
 class Context {
 public:
     virtual ~Context() = default;
 
     virtual std::unique_ptr<HostQueue> createHostQueue() = 0;
-    virtual std::unique_ptr<Buffer> createBuffer() = 0;
+    virtual std::unique_ptr<Buffer> createBuffer(bool isImport, void* hostPtr, size_t size) = 0;
     virtual std::unique_ptr<Command> createCommand() = 0;
     virtual std::unique_ptr<Event> createEvent() = 0;
     virtual std::unique_ptr<Image> createImage() = 0;

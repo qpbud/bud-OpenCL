@@ -2,18 +2,18 @@
 #include "common/Except.hpp"
 #include "platform/Platform.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 std::vector<Platform> Platform::s_platforms{};
 std::once_flag Platform::s_initFlag{};
 
 template<>
-Platform::Platform(QP)
+Platform::Platform(BUD)
     : Object<_cl_platform_id>()
     , m_profile("EMBEDDED_PROFILE")
     , m_version("OpenCL 3.0")
     , m_numericVersion(CL_MAKE_VERSION_KHR(3, 0, 0))
-    , m_name("QP")
+    , m_name("BUD")
     , m_vendor("BUD")
     , m_extensions("")
     , m_extensionsWithVersion()
@@ -24,7 +24,7 @@ Platform::Platform(QP)
 }
 
 void Platform::init() {
-    s_platforms.emplace_back(QP());
+    s_platforms.emplace_back(BUD());
 }
 
 cl_uint Platform::count() {

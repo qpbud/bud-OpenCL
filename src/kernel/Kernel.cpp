@@ -1,11 +1,11 @@
 #include "kernel/Kernel.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Kernel::Kernel(Context& context, Program& program, std::string&& entry)
     : Object<_cl_kernel>()
     , Scope(context)
-    , H1DN<detail::Kernel>()
+    , H1DN<hal::Kernel>()
     , m_program(&program)
     , m_entry(std::move(entry)) {
     for (cl_uint i = 0; i < context.getDeviceCount(); i++) {
@@ -16,7 +16,7 @@ Kernel::Kernel(Context& context, Program& program, std::string&& entry)
 Kernel::Kernel(Context& context, const Kernel& srcKernel)
     : Object<_cl_kernel>()
     , Scope(context)
-    , H1DN<detail::Kernel>()
+    , H1DN<hal::Kernel>()
     , m_program(srcKernel.m_program)
     , m_entry(srcKernel.m_entry) {
     for (cl_uint i = 0; i < context.getDeviceCount(); i++) {

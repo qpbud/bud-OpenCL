@@ -1,6 +1,6 @@
 #include "queue/QueueHost.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Queue<QueueBase::Type::host>::Queue(Context& context,
                                     Device& device,
@@ -8,7 +8,7 @@ Queue<QueueBase::Type::host>::Queue(Context& context,
                                     cl_command_queue_properties propertyBits,
                                     bool enableProfiling)
     : QueueBase(context, QueueBase::Type::host, &device, std::move(properties), propertyBits)
-    , H1D1<detail::HostQueue>(device, context[device])
+    , H1D1<hal::HostQueue>(device, context[device])
     , m_enableProfiling(enableProfiling)
     , m_hostCommandList()
     , m_deviceCommandList() {
