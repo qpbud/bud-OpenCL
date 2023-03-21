@@ -1,7 +1,7 @@
 #include <cstring>
 #include "sampler/Sampler.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Sampler::Sampler(Context& context,
                  std::vector<cl_sampler_properties>&& properties,
@@ -10,7 +10,7 @@ Sampler::Sampler(Context& context,
                  cl_filter_mode filterMode)
     : Object<_cl_sampler>()
     , Scope(context)
-    , H1DN<detail::Sampler>()
+    , H1DN<hal::Sampler>()
     , m_properties(std::move(properties))
     , m_normalizedCoords(normalizedCoords)
     , m_addressingMode(addressingMode)

@@ -9,9 +9,9 @@
 #include "context/Scope.hpp"
 #include "program/Program.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
-class Kernel : public Object<_cl_kernel>, public Scope, public H1DN<detail::Kernel> {
+class Kernel : public Object<_cl_kernel>, public Scope, public H1DN<hal::Kernel> {
     boost::intrusive_ptr<Program> m_program;
     std::string m_entry;
 public:

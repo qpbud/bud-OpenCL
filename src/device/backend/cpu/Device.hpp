@@ -1,14 +1,14 @@
 #pragma once
 
-#include "device/detail/Device.hpp"
+#include "device/hal/Device.hpp"
 
-namespace qp::cl::backend::cpu {
+namespace bud::cl::backend::cpu {
 
-class Device : public detail::Device {
+class Device : public hal::Device {
 public:
     Device();
 
-    std::unique_ptr<detail::Context> createContext() override;
+    std::unique_ptr<hal::Context> createContext() override;
 };
 
 }

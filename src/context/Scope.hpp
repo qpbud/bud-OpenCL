@@ -3,7 +3,7 @@
 #include <boost/smart_ptr/intrusive_ptr.hpp>
 #include "context/Context.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 class Scope {
 protected:

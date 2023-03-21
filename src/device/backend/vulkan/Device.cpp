@@ -2,13 +2,13 @@
 #include "device/backend/vulkan/Device.hpp"
 #include "device/backend/vulkan/Context.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace bud::cl::backend::vulkan {
 
 Device::Device()
-    : detail::Device(CL_DEVICE_TYPE_GPU) {
+    : hal::Device(CL_DEVICE_TYPE_GPU) {
 }
 
-std::unique_ptr<detail::Context> Device::createContext() {
+std::unique_ptr<hal::Context> Device::createContext() {
     return std::make_unique<Context>();
 }
 

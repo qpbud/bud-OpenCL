@@ -1,7 +1,7 @@
 #include <cstring>
 #include "context/Context.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 Context& Context::construct(std::vector<cl_context_properties>&& properties,
                             std::vector<cl_device_id>&& devices,
@@ -14,7 +14,7 @@ Context::Context(std::vector<cl_context_properties>&& properties,
                  std::vector<cl_device_id>&& devices,
                  std::function<void(const char*, const void*, size_t)>&& notify)
     : Object<_cl_context>()
-    , H1DN<detail::Context>()
+    , H1DN<hal::Context>()
     , m_properties(std::move(properties))
     , m_devices(std::move(devices))
     , m_notify(std::move(notify))

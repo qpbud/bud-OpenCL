@@ -8,10 +8,10 @@
 #include "common/Object.hpp"
 #include "device/Device.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 class Platform : public Object<_cl_platform_id> {
-    struct QP {};
+    struct BUD {};
 
     static std::vector<Platform> s_platforms;
     static std::once_flag s_initFlag;

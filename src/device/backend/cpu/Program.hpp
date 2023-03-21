@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Program.hpp"
+#include "device/hal/Program.hpp"
 
-namespace qp::cl::backend::cpu {
+namespace bud::cl::backend::cpu {
 
-class Program : public detail::Program {};
+class Program : public hal::Program {};
 
 }

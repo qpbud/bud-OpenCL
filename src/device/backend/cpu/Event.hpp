@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Event.hpp"
+#include "device/hal/Event.hpp"
 
-namespace qp::cl::backend::cpu {
+namespace bud::cl::backend::cpu {
 
-class Event : public detail::Event {};
+class Event : public hal::Event {};
 
 }

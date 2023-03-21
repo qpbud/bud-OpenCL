@@ -1,6 +1,6 @@
 #include "memory/MemoryBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 MemoryBase::MemoryBase(Context& context,
                        MemoryBase::Type type,

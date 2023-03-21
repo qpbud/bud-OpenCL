@@ -12,7 +12,7 @@ clGetDeviceIDs(cl_platform_id platform,
                cl_uint* num_devices) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!platform || !platform->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PLATFORM);
+            throw bud::cl::Except(CL_INVALID_PLATFORM);
         }
 
         if (device_type != CL_DEVICE_TYPE_CPU &&
@@ -21,22 +21,22 @@ clGetDeviceIDs(cl_platform_id platform,
             device_type != CL_DEVICE_TYPE_CUSTOM &&
             device_type != CL_DEVICE_TYPE_DEFAULT &&
             device_type != CL_DEVICE_TYPE_ALL) {
-            throw qp::cl::Except(CL_INVALID_DEVICE_TYPE);
+            throw bud::cl::Except(CL_INVALID_DEVICE_TYPE);
         }
 
         if (num_entries == 0 && devices) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         if (!devices && !num_devices) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
-        auto& platformInternal = static_cast<qp::cl::Platform&>(*platform);
+        auto& platformInternal = static_cast<bud::cl::Platform&>(*platform);
 
         cl_uint count = 0;
         for (cl_uint i = 0; i < platformInternal.getDeviceCount(); i++) {
-            qp::cl::Device& device = platformInternal.getDevice(i);
+            bud::cl::Device& device = platformInternal.getDevice(i);
             if (device_type == CL_DEVICE_TYPE_DEFAULT ||
                 device_type == CL_DEVICE_TYPE_ALL ||
                 device_type == device.type()) {
@@ -51,14 +51,14 @@ clGetDeviceIDs(cl_platform_id platform,
         }
 
         if (count == 0) {
-            throw qp::cl::Except(CL_DEVICE_NOT_FOUND);
+            throw bud::cl::Except(CL_DEVICE_NOT_FOUND);
         }
 
         if (num_devices) {
             *num_devices = count;
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -75,10 +75,10 @@ clGetDeviceInfo(cl_device_id device,
                 size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!device || !device->isValid()) {
-            throw qp::cl::Except(CL_INVALID_DEVICE);
+            throw bud::cl::Except(CL_INVALID_DEVICE);
         }
 
-        auto& deviceInternal = static_cast<qp::cl::Device&>(*device);
+        auto& deviceInternal = static_cast<bud::cl::Device&>(*device);
 
         if (param_value) {
             deviceInternal.getInfo(param_name, param_value_size, param_value);
@@ -87,7 +87,7 @@ clGetDeviceInfo(cl_device_id device,
             *param_value_size_ret = deviceInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;

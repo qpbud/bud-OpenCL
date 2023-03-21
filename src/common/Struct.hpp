@@ -3,7 +3,7 @@
 #include <array>
 #include "common/Khronos.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 struct CopyRegion {
     struct {

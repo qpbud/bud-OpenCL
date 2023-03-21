@@ -2,7 +2,7 @@
 
 #include "event/EventBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<>
 class Event<EventBase::Type::host> : public EventBase {

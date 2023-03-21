@@ -15,17 +15,17 @@ clCreateProgramWithSource(cl_context context,
                           cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         if (count == 0 || !strings) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         std::vector<std::string> sources;
         for (cl_uint i = 0; i < count; i++) {
             if (!strings[i]) {
-                throw qp::cl::Except(CL_INVALID_VALUE);
+                throw bud::cl::Except(CL_INVALID_VALUE);
             }
             if (lengths && lengths[i] != 0) {
                 sources.emplace_back(strings[i], lengths[i]);
@@ -34,8 +34,8 @@ clCreateProgramWithSource(cl_context context,
             }
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        cl_program program = &contextInternal.create<qp::cl::Program>(std::move(sources));
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
+        cl_program program = &contextInternal.create<bud::cl::Program>(std::move(sources));
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -43,7 +43,7 @@ clCreateProgramWithSource(cl_context context,
         return program;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -60,18 +60,18 @@ clCreateProgramWithIL(cl_context context,
                       cl_int* errcode_ret) CL_API_SUFFIX__VERSION_2_1 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         if (!il || length == 0) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         std::vector<unsigned char> ilVec(length);
         std::memcpy(ilVec.data(), il, length);
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        cl_program program = &contextInternal.create<qp::cl::Program>(std::move(ilVec));
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
+        cl_program program = &contextInternal.create<bud::cl::Program>(std::move(ilVec));
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -79,7 +79,7 @@ clCreateProgramWithIL(cl_context context,
         return program;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -99,17 +99,17 @@ clCreateProgramWithBinary(cl_context context,
                           cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         if (!device_list || num_devices == 0) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
         std::vector<cl_device_id> devicesVec;
         std::vector<std::vector<unsigned char>> binariesVec;
         for (cl_uint i = 0; i < num_devices; i++) {
-            auto& deviceInternal = static_cast<qp::cl::Device&>(*device_list[i]);
+            auto& deviceInternal = static_cast<bud::cl::Device&>(*device_list[i]);
             bool containsDevice = false;
             for (cl_uint j = 0; j < contextInternal.getDeviceCount(); j++) {
                 if (&contextInternal.getDevice(j) == &deviceInternal) {
@@ -118,7 +118,7 @@ clCreateProgramWithBinary(cl_context context,
                 }
             }
             if (!containsDevice) {
-                throw qp::cl::Except(CL_INVALID_DEVICE);
+                throw bud::cl::Except(CL_INVALID_DEVICE);
             }
             devicesVec.push_back(device_list[i]);
             std::vector<unsigned char> binary(lengths[i]);
@@ -126,7 +126,7 @@ clCreateProgramWithBinary(cl_context context,
             binariesVec.push_back(std::move(binary));
         }
 
-        cl_program program = &contextInternal.create<qp::cl::Program>(std::move(devicesVec), std::move(binariesVec));
+        cl_program program = &contextInternal.create<bud::cl::Program>(std::move(devicesVec), std::move(binariesVec));
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -134,7 +134,7 @@ clCreateProgramWithBinary(cl_context context,
         return program;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -160,13 +160,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clRetainProgram(cl_program program) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!program || !program->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PROGRAM);
+            throw bud::cl::Except(CL_INVALID_PROGRAM);
         }
 
-        auto& programInternal = static_cast<qp::cl::Program&>(*program);
+        auto& programInternal = static_cast<bud::cl::Program&>(*program);
         programInternal.retain();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -179,13 +179,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clReleaseProgram(cl_program program) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!program || !program->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PROGRAM);
+            throw bud::cl::Except(CL_INVALID_PROGRAM);
         }
 
-        auto& programInternal = static_cast<qp::cl::Program&>(*program);
+        auto& programInternal = static_cast<bud::cl::Program&>(*program);
         programInternal.release();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -201,17 +201,17 @@ clSetProgramReleaseCallback(cl_program program,
                             void* user_data) CL_API_SUFFIX__VERSION_2_2_DEPRECATED {
     try {
         if (!program || !program->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PROGRAM);
+            throw bud::cl::Except(CL_INVALID_PROGRAM);
         }
 
         if (!pfn_notify) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
-        auto& programInternal = static_cast<qp::cl::Program&>(*program);
+        auto& programInternal = static_cast<bud::cl::Program&>(*program);
         programInternal.setReleaseCallback([pfn_notify, program, user_data] { pfn_notify(program, user_data); });
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -274,10 +274,10 @@ CL_API_ENTRY cl_int CL_API_CALL
 clUnloadPlatformCompiler(cl_platform_id platform) CL_API_SUFFIX__VERSION_1_2 {
     try {
         if (!platform || !platform->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PLATFORM);
+            throw bud::cl::Except(CL_INVALID_PLATFORM);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -299,10 +299,10 @@ clGetProgramInfo(cl_program program,
                  size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!program || !program->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PROGRAM);
+            throw bud::cl::Except(CL_INVALID_PROGRAM);
         }
 
-        auto& programInternal = static_cast<qp::cl::Program&>(*program);
+        auto& programInternal = static_cast<bud::cl::Program&>(*program);
 
         if (param_value) {
             programInternal.getInfo(param_name, param_value_size, param_value);
@@ -311,7 +311,7 @@ clGetProgramInfo(cl_program program,
             *param_value_size_ret = programInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;

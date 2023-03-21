@@ -11,9 +11,9 @@
 #include "context/Context.hpp"
 #include "context/Scope.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
-class Program : public Object<_cl_program>, public Scope, public H1DN<detail::Program> {
+class Program : public Object<_cl_program>, public Scope, public H1DN<hal::Program> {
     std::vector<std::string> m_sources;
     std::vector<unsigned char> m_il;
     std::vector<cl_device_id> m_devices;

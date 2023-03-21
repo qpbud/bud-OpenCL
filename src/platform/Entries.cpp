@@ -9,24 +9,24 @@ clGetPlatformIDs(cl_uint num_entries,
                  cl_uint* num_platforms) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (num_entries == 0 && platforms) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         if (!platforms && !num_platforms) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         if (num_platforms) {
-            *num_platforms = qp::cl::Platform::count();
+            *num_platforms = bud::cl::Platform::count();
         }
 
         if (platforms) {
             for (cl_uint i = 0; i < num_entries; i++) {
-                platforms[i] = &qp::cl::Platform::get(i);
+                platforms[i] = &bud::cl::Platform::get(i);
             }
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -43,10 +43,10 @@ clGetPlatformInfo(cl_platform_id platform,
                   size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!platform || !platform->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PLATFORM);
+            throw bud::cl::Except(CL_INVALID_PLATFORM);
         }
 
-        auto& platformInternal = static_cast<qp::cl::Platform&>(*platform);
+        auto& platformInternal = static_cast<bud::cl::Platform&>(*platform);
 
         if (param_value) {
             platformInternal.getInfo(param_name, param_value_size, param_value);
@@ -55,7 +55,7 @@ clGetPlatformInfo(cl_platform_id platform,
             *param_value_size_ret = platformInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;

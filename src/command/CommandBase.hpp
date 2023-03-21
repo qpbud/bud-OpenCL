@@ -4,7 +4,7 @@
 #include <utility>
 #include "common/Khronos.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 class CommandBase {
 public:

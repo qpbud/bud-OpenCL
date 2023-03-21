@@ -7,7 +7,7 @@
 #include "context/Context.hpp"
 #include "context/Scope.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 class EventBase : public Object<_cl_event>, public Scope {
 public:

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/HostQueue.hpp"
+#include "device/hal/HostQueue.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace bud::cl::backend::vulkan {
 
-class HostQueue : public detail::HostQueue {};
+class HostQueue : public hal::HostQueue {};
 
 }

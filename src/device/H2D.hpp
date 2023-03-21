@@ -5,37 +5,37 @@
 #include <algorithm>
 #include "device/Device.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
-template<typename Detail>
+template<typename Hal>
 class H1D1 {
 protected:
     Device& m_device;
-    std::unique_ptr<Detail> m_detail;
+    std::unique_ptr<Hal> m_hal;
 public:
     template<typename ... Args>
     H1D1(Device& device, Args&&... args)
         : m_device(device)
-        , m_detail() {
-        m_detail = detail::Device::Creator<Detail>()(m_device, std::forward<Args>(args)...);
+        , m_hal() {
+        m_hal = hal::Device::Creator<Hal>()(m_device, std::forward<Args>(args)...);
     }
 
     Device& getDevice() {
         return m_device;
     }
 
-    operator Detail&() { return *m_detail; }
+    operator Hal&() { return *m_hal; }
 };
 
-template<typename Detail>
+template<typename Hal>
 class H1DN {
     std::vector<Device*> m_devices;
-    std::vector<std::unique_ptr<Detail>> m_details;
+    std::vector<std::unique_ptr<Hal>> m_hals;
 public:
     template<typename ... Args>
     void append(Device& device, Args&&... args) {
         m_devices.push_back(&device);
-        m_details.push_back(detail::Device::Creator<Detail>()(device, std::forward<Args>(args)...));
+        m_hals.push_back(hal::Device::Creator<Hal>()(device, std::forward<Args>(args)...));
     }
 
     cl_uint getDeviceCount() const {
@@ -46,8 +46,8 @@ public:
         return *m_devices[index];
     }
 
-    Detail& operator[](Device& device) {
-        return *m_details[std::distance(m_devices.begin(), std::find(m_devices.begin(), m_devices.end(), &device))];
+    Hal& operator[](Device& device) {
+        return *m_hals[std::distance(m_devices.begin(), std::find(m_devices.begin(), m_devices.end(), &device))];
     }
 };
 

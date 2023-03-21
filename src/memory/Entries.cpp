@@ -14,7 +14,7 @@ clCreateBuffer(cl_context context,
                cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         if (flags & (~(CL_MEM_READ_WRITE |
@@ -27,30 +27,30 @@ clCreateBuffer(cl_context context,
                        CL_MEM_HOST_READ_ONLY |
                        CL_MEM_HOST_NO_ACCESS |
                        CL_MEM_KERNEL_READ_AND_WRITE)) != 0) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         if ((flags & CL_MEM_READ_WRITE != 0 && flags & CL_MEM_WRITE_ONLY != 0) ||
             (flags & CL_MEM_READ_WRITE != 0 && flags & CL_MEM_READ_ONLY != 0) ||
             (flags & CL_MEM_WRITE_ONLY != 0 && flags & CL_MEM_READ_ONLY != 0)) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         if (size == 0) {
-            throw qp::cl::Except(CL_INVALID_BUFFER_SIZE);
+            throw bud::cl::Except(CL_INVALID_BUFFER_SIZE);
         }
 
         if (!host_ptr && (flags & CL_MEM_USE_HOST_PTR != 0 || flags & CL_MEM_COPY_HOST_PTR != 0)) {
-            throw qp::cl::Except(CL_INVALID_HOST_PTR);
+            throw bud::cl::Except(CL_INVALID_HOST_PTR);
         }
 
         if (host_ptr && (flags & CL_MEM_USE_HOST_PTR == 0 && flags & CL_MEM_COPY_HOST_PTR == 0)) {
-            throw qp::cl::Except(CL_INVALID_HOST_PTR);
+            throw bud::cl::Except(CL_INVALID_HOST_PTR);
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
 
-        cl_mem buffer = &contextInternal.create<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>>(
+        cl_mem buffer = &contextInternal.create<bud::cl::Memory<bud::cl::MemoryBase::Type::buffer>>(
             std::vector<cl_mem_properties>(), flags, host_ptr, size);
 
         if (errcode_ret) {
@@ -59,7 +59,7 @@ clCreateBuffer(cl_context context,
         return buffer;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -78,7 +78,7 @@ clCreateBufferWithProperties(cl_context context,
                              cl_int* errcode_ret) CL_API_SUFFIX__VERSION_3_0 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         std::vector<cl_mem_properties> propertiesVec;
@@ -86,7 +86,7 @@ clCreateBufferWithProperties(cl_context context,
             while (properties && *properties != 0) {
                 switch (*properties) {
                     default:
-                        throw qp::cl::Except(CL_INVALID_PROPERTY);
+                        throw bud::cl::Except(CL_INVALID_PROPERTY);
                 }
                 properties += 2;
             }
@@ -103,30 +103,30 @@ clCreateBufferWithProperties(cl_context context,
                        CL_MEM_HOST_READ_ONLY |
                        CL_MEM_HOST_NO_ACCESS |
                        CL_MEM_KERNEL_READ_AND_WRITE)) != 0) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         if ((flags & CL_MEM_READ_WRITE != 0 && flags & CL_MEM_WRITE_ONLY != 0) ||
             (flags & CL_MEM_READ_WRITE != 0 && flags & CL_MEM_READ_ONLY != 0) ||
             (flags & CL_MEM_WRITE_ONLY != 0 && flags & CL_MEM_READ_ONLY != 0)) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
         if (size == 0) {
-            throw qp::cl::Except(CL_INVALID_BUFFER_SIZE);
+            throw bud::cl::Except(CL_INVALID_BUFFER_SIZE);
         }
 
         if (!host_ptr && (flags & CL_MEM_USE_HOST_PTR != 0 || flags & CL_MEM_COPY_HOST_PTR != 0)) {
-            throw qp::cl::Except(CL_INVALID_HOST_PTR);
+            throw bud::cl::Except(CL_INVALID_HOST_PTR);
         }
 
         if (host_ptr && (flags & CL_MEM_USE_HOST_PTR == 0 && flags & CL_MEM_COPY_HOST_PTR == 0)) {
-            throw qp::cl::Except(CL_INVALID_HOST_PTR);
+            throw bud::cl::Except(CL_INVALID_HOST_PTR);
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
 
-        cl_mem buffer = &contextInternal.create<qp::cl::Memory<qp::cl::MemoryBase::Type::buffer>>(
+        cl_mem buffer = &contextInternal.create<bud::cl::Memory<bud::cl::MemoryBase::Type::buffer>>(
             std::move(propertiesVec), flags, host_ptr, size);
 
         if (errcode_ret) {
@@ -135,7 +135,7 @@ clCreateBufferWithProperties(cl_context context,
         return buffer;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -261,13 +261,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clRetainMemObject(cl_mem memobj) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!memobj || !memobj->isValid()) {
-            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+            throw bud::cl::Except(CL_INVALID_MEM_OBJECT);
         }
 
-        auto& memoryBaseInternal = static_cast<qp::cl::MemoryBase&>(*memobj);
+        auto& memoryBaseInternal = static_cast<bud::cl::MemoryBase&>(*memobj);
         memoryBaseInternal.retain();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -280,13 +280,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clReleaseMemObject(cl_mem memobj) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!memobj || !memobj->isValid()) {
-            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+            throw bud::cl::Except(CL_INVALID_MEM_OBJECT);
         }
 
-        auto& memoryBaseInternal = static_cast<qp::cl::MemoryBase&>(*memobj);
+        auto& memoryBaseInternal = static_cast<bud::cl::MemoryBase&>(*memobj);
         memoryBaseInternal.release();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -302,15 +302,15 @@ clSetMemObjectDestructorCallback(cl_mem memobj,
                                  void* user_data) CL_API_SUFFIX__VERSION_1_1 {
     try {
         if (!memobj || !memobj->isValid()) {
-            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+            throw bud::cl::Except(CL_INVALID_MEM_OBJECT);
         }
         if (!pfn_notify) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
-        auto& memoryBaseInternal = static_cast<qp::cl::MemoryBase&>(*memobj);
+        auto& memoryBaseInternal = static_cast<bud::cl::MemoryBase&>(*memobj);
         memoryBaseInternal.setDestructorCallback([pfn_notify, memobj, user_data] { pfn_notify(memobj, user_data); });
     } catch (const std::exception& e){
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -327,10 +327,10 @@ clGetMemObjectInfo(cl_mem memobj,
                    size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!memobj || !memobj->isValid()) {
-            throw qp::cl::Except(CL_INVALID_MEM_OBJECT);
+            throw bud::cl::Except(CL_INVALID_MEM_OBJECT);
         }
 
-        auto& memoryBaseInternal = static_cast<qp::cl::MemoryBase&>(*memobj);
+        auto& memoryBaseInternal = static_cast<bud::cl::MemoryBase&>(*memobj);
 
         if (param_value) {
             memoryBaseInternal.getInfo(param_name, param_value_size, param_value);
@@ -339,7 +339,7 @@ clGetMemObjectInfo(cl_mem memobj,
             *param_value_size_ret = memoryBaseInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;

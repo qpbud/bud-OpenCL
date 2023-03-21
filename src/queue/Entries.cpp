@@ -13,15 +13,15 @@ clCreateCommandQueueWithProperties(cl_context context,
                                    cl_int* errcode_ret) CL_API_SUFFIX__VERSION_2_0 {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         if (!device || !device->isValid()) {
-            throw qp::cl::Except(CL_INVALID_DEVICE);
+            throw bud::cl::Except(CL_INVALID_DEVICE);
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        auto& deviceInternal = static_cast<qp::cl::Device&>(*device);
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
+        auto& deviceInternal = static_cast<bud::cl::Device&>(*device);
         bool containsDevice = false;
         for (cl_uint i = 0; i < contextInternal.getDeviceCount(); i++) {
             if (&contextInternal.getDevice(i) == &deviceInternal) {
@@ -30,7 +30,7 @@ clCreateCommandQueueWithProperties(cl_context context,
             }
         }
         if (!containsDevice) {
-            throw qp::cl::Except(CL_INVALID_DEVICE);
+            throw bud::cl::Except(CL_INVALID_DEVICE);
         }
 
         std::vector<cl_queue_properties> propertiesVec;
@@ -45,19 +45,19 @@ clCreateCommandQueueWithProperties(cl_context context,
                              | CL_QUEUE_PROFILING_ENABLE
                              | CL_QUEUE_ON_DEVICE
                              | CL_QUEUE_ON_DEVICE_DEFAULT)) != 0) {
-                            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+                            throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
                         }
                         if (*(properties + 1) & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE != 0) {
-                            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+                            throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
                         }
                         if (*(properties + 1) & CL_QUEUE_PROFILING_ENABLE != 0) {
                             enableProfiling = true;
                         }
                         if (*(properties + 1) & CL_QUEUE_ON_DEVICE != 0) {
-                            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+                            throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
                         }
                         if (*(properties + 1) & CL_QUEUE_ON_DEVICE_DEFAULT != 0) {
-                            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+                            throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
                         }
                         propertyBits = *(properties + 1);
                         break;
@@ -65,7 +65,7 @@ clCreateCommandQueueWithProperties(cl_context context,
                     case CL_QUEUE_SIZE:
                         [[fallthrough]];
                     default:
-                        throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+                        throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
                 }
                 propertiesVec.push_back(*properties);
                 propertiesVec.push_back(*(properties + 1));
@@ -74,7 +74,7 @@ clCreateCommandQueueWithProperties(cl_context context,
             propertiesVec.push_back(0);
         }
 
-        cl_command_queue queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
+        cl_command_queue queue = &contextInternal.create<bud::cl::Queue<bud::cl::QueueBase::Type::host>>(
             deviceInternal, std::move(propertiesVec), propertyBits, enableProfiling);
 
         if (errcode_ret) {
@@ -83,7 +83,7 @@ clCreateCommandQueueWithProperties(cl_context context,
         return queue;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -100,15 +100,15 @@ clCreateCommandQueue(cl_context context,
                      cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_2_DEPRECATED {
     try {
         if (!context || !context->isValid()) {
-            throw qp::cl::Except(CL_INVALID_CONTEXT);
+            throw bud::cl::Except(CL_INVALID_CONTEXT);
         }
 
         if (!device || !device->isValid()) {
-            throw qp::cl::Except(CL_INVALID_DEVICE);
+            throw bud::cl::Except(CL_INVALID_DEVICE);
         }
 
-        auto& contextInternal = static_cast<qp::cl::Context&>(*context);
-        auto& deviceInternal = static_cast<qp::cl::Device&>(*device);
+        auto& contextInternal = static_cast<bud::cl::Context&>(*context);
+        auto& deviceInternal = static_cast<bud::cl::Device&>(*device);
         bool containsDevice = false;
         for (cl_uint i = 0; i < contextInternal.getDeviceCount(); i++) {
             if (&contextInternal.getDevice(i) == &deviceInternal) {
@@ -117,21 +117,21 @@ clCreateCommandQueue(cl_context context,
             }
         }
         if (!containsDevice) {
-            throw qp::cl::Except(CL_INVALID_DEVICE);
+            throw bud::cl::Except(CL_INVALID_DEVICE);
         }
 
         bool enableProfiling = false;
         if (properties & (~(CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE)) != 0) {
-            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+            throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
         }
         if (properties & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE != 0) {
-            throw qp::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
+            throw bud::cl::Except(CL_INVALID_QUEUE_PROPERTIES);
         }
         if (properties & CL_QUEUE_PROFILING_ENABLE != 0) {
             enableProfiling = true;
         }
 
-        cl_command_queue queue = &contextInternal.create<qp::cl::Queue<qp::cl::QueueBase::Type::host>>(
+        cl_command_queue queue = &contextInternal.create<bud::cl::Queue<bud::cl::QueueBase::Type::host>>(
             deviceInternal, std::vector<cl_queue_properties>(), properties, enableProfiling);
 
         if (errcode_ret) {
@@ -140,7 +140,7 @@ clCreateCommandQueue(cl_context context,
         return queue;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -161,13 +161,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clRetainCommandQueue(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!command_queue || !command_queue->isValid()) {
-            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+            throw bud::cl::Except(CL_INVALID_COMMAND_QUEUE);
         }
 
-        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        auto& queueBaseInternal = static_cast<bud::cl::QueueBase&>(*command_queue);
         queueBaseInternal.retain();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -180,13 +180,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clReleaseCommandQueue(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!command_queue || !command_queue->isValid()) {
-            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+            throw bud::cl::Except(CL_INVALID_COMMAND_QUEUE);
         }
 
-        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        auto& queueBaseInternal = static_cast<bud::cl::QueueBase&>(*command_queue);
         queueBaseInternal.release();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -203,10 +203,10 @@ clGetCommandQueueInfo(cl_command_queue command_queue,
                       size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!command_queue || !command_queue->isValid()) {
-            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+            throw bud::cl::Except(CL_INVALID_COMMAND_QUEUE);
         }
 
-        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
+        auto& queueBaseInternal = static_cast<bud::cl::QueueBase&>(*command_queue);
 
         if (param_value) {
             queueBaseInternal.getInfo(param_name, param_value_size, param_value);
@@ -215,7 +215,7 @@ clGetCommandQueueInfo(cl_command_queue command_queue,
             *param_value_size_ret = queueBaseInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -236,18 +236,18 @@ CL_API_ENTRY cl_int CL_API_CALL
 clFlush(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!command_queue || !command_queue->isValid()) {
-            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+            throw bud::cl::Except(CL_INVALID_COMMAND_QUEUE);
         }
 
-        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
-        if (queueBaseInternal.type() != qp::cl::QueueBase::Type::host) {
-            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        auto& queueBaseInternal = static_cast<bud::cl::QueueBase&>(*command_queue);
+        if (queueBaseInternal.type() != bud::cl::QueueBase::Type::host) {
+            throw bud::cl::Except(CL_INVALID_COMMAND_QUEUE);
         }
 
-        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        auto& queueHostInternal = static_cast<bud::cl::Queue<bud::cl::QueueBase::Type::host>&>(queueBaseInternal);
         queueHostInternal.flush();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -260,18 +260,18 @@ CL_API_ENTRY cl_int CL_API_CALL
 clFinish(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!command_queue || !command_queue->isValid()) {
-            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+            throw bud::cl::Except(CL_INVALID_COMMAND_QUEUE);
         }
 
-        auto& queueBaseInternal = static_cast<qp::cl::QueueBase&>(*command_queue);
-        if (queueBaseInternal.type() != qp::cl::QueueBase::Type::host) {
-            throw qp::cl::Except(CL_INVALID_COMMAND_QUEUE);
+        auto& queueBaseInternal = static_cast<bud::cl::QueueBase&>(*command_queue);
+        if (queueBaseInternal.type() != bud::cl::QueueBase::Type::host) {
+            throw bud::cl::Except(CL_INVALID_COMMAND_QUEUE);
         }
 
-        auto& queueHostInternal = static_cast<qp::cl::Queue<qp::cl::QueueBase::Type::host>&>(queueBaseInternal);
+        auto& queueHostInternal = static_cast<bud::cl::Queue<bud::cl::QueueBase::Type::host>&>(queueBaseInternal);
         queueHostInternal.finish();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;

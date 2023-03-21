@@ -3,14 +3,18 @@
 #include <vector>
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 #include "common/Struct.hpp"
+#include "common/Chain.hpp"
 #include "memory/MemoryBuffer.hpp"
 #include "command/CommandBase.hpp"
 #include "event/EventBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<>
 class Command<CommandBase::Type::host> : public CommandBase {
+    Device& m_device;
+    Chain<cl_int(cl_int)> m_chain;
+
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::waitEvents)>,
                 std::vector<boost::intrusive_ptr<EventBase>>&& events);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::setEvent)>,
@@ -39,7 +43,7 @@ class Command<CommandBase::Type::host> : public CommandBase {
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::marker)>);
     void append(std::in_place_index_t<static_cast<std::size_t>(CommandBase::Category::barrier)>);
 public:
-    Command();
+    Command(Device& device);
 
     template<CommandBase::Category category, typename ... Args>
     void append(Args&&... args) {

@@ -1,7 +1,7 @@
 #include <cstring>
 #include "queue/QueueBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 QueueBase::QueueBase(Context& context,
                      QueueBase::Type type,

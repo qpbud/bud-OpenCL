@@ -10,7 +10,7 @@
 #include "context/Context.hpp"
 #include "context/Scope.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 class MemoryBase : public Object<_cl_mem>, public Scope {
 public:

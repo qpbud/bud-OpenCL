@@ -1,9 +1,9 @@
 #pragma once
 
-#include "device/detail/Sampler.hpp"
+#include "device/hal/Sampler.hpp"
 
-namespace qp::cl::backend::vulkan {
+namespace bud::cl::backend::vulkan {
 
-class Sampler : public detail::Sampler {};
+class Sampler : public hal::Sampler {};
 
 }

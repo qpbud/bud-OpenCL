@@ -4,10 +4,10 @@
 #include "device/H2D.hpp"
 #include "memory/MemoryBase.hpp"
 
-namespace qp::cl {
+namespace bud::cl {
 
 template<>
-class Memory<MemoryBase::Type::buffer> : public MemoryBase, public H1DN<detail::Buffer> {
+class Memory<MemoryBase::Type::buffer> : public MemoryBase, public H1DN<hal::Buffer> {
     size_t m_size;
 public:
     Memory(Context& context,

@@ -12,17 +12,17 @@ clCreateKernel(cl_program program,
                cl_int* errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!program || !program->isValid()) {
-            throw qp::cl::Except(CL_INVALID_PROGRAM);
+            throw bud::cl::Except(CL_INVALID_PROGRAM);
         }
 
         if (!kernel_name) {
-            throw qp::cl::Except(CL_INVALID_VALUE);
+            throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
-        auto& programInternal = static_cast<qp::cl::Program&>(*program);
+        auto& programInternal = static_cast<bud::cl::Program&>(*program);
         auto& contextInternal = programInternal.getContext();
         std::string entry(kernel_name);
-        cl_kernel kernel = &contextInternal.create<qp::cl::Kernel>(programInternal, std::move(entry));
+        cl_kernel kernel = &contextInternal.create<bud::cl::Kernel>(programInternal, std::move(entry));
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -30,7 +30,7 @@ clCreateKernel(cl_program program,
         return kernel;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -52,13 +52,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clRetainKernel(cl_kernel kernel) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!kernel || !kernel->isValid()) {
-            throw qp::cl::Except(CL_INVALID_KERNEL);
+            throw bud::cl::Except(CL_INVALID_KERNEL);
         }
 
-        auto& kernelInternal = static_cast<qp::cl::Kernel&>(*kernel);
+        auto& kernelInternal = static_cast<bud::cl::Kernel&>(*kernel);
         kernelInternal.retain();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -71,13 +71,13 @@ CL_API_ENTRY cl_int CL_API_CALL
 clReleaseKernel(cl_kernel kernel) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!kernel || !kernel->isValid()) {
-            throw qp::cl::Except(CL_INVALID_KERNEL);
+            throw bud::cl::Except(CL_INVALID_KERNEL);
         }
 
-        auto& kernelInternal = static_cast<qp::cl::Kernel&>(*kernel);
+        auto& kernelInternal = static_cast<bud::cl::Kernel&>(*kernel);
         kernelInternal.release();
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -93,13 +93,13 @@ clSetKernelArg(cl_kernel kernel,
                const void* arg_value) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!kernel || !kernel->isValid()) {
-            throw qp::cl::Except(CL_INVALID_KERNEL);
+            throw bud::cl::Except(CL_INVALID_KERNEL);
         }
 
-        auto& kernelInternal = static_cast<qp::cl::Kernel&>(*kernel);
+        auto& kernelInternal = static_cast<bud::cl::Kernel&>(*kernel);
         kernelInternal.setArg(arg_index, arg_size, arg_value);
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -114,13 +114,13 @@ clSetKernelArgSVMPointer(cl_kernel kernel,
                          const void* arg_value) CL_API_SUFFIX__VERSION_2_0 {
     try {
         if (!kernel || !kernel->isValid()) {
-            throw qp::cl::Except(CL_INVALID_KERNEL);
+            throw bud::cl::Except(CL_INVALID_KERNEL);
         }
 
-        auto& kernelInternal = static_cast<qp::cl::Kernel&>(*kernel);
+        auto& kernelInternal = static_cast<bud::cl::Kernel&>(*kernel);
         kernelInternal.setArgSvmPointer(arg_index, arg_value);
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
@@ -142,12 +142,12 @@ clCloneKernel(cl_kernel source_kernel,
               cl_int* errcode_ret) CL_API_SUFFIX__VERSION_2_1 {
     try {
         if (!source_kernel || !source_kernel->isValid()) {
-            throw qp::cl::Except(CL_INVALID_KERNEL);
+            throw bud::cl::Except(CL_INVALID_KERNEL);
         }
 
-        auto& kernelInternal = static_cast<qp::cl::Kernel&>(*source_kernel);
+        auto& kernelInternal = static_cast<bud::cl::Kernel&>(*source_kernel);
         auto& contextInternal = kernelInternal.getContext();
-        cl_kernel kernel = &contextInternal.create<qp::cl::Kernel>(kernelInternal);
+        cl_kernel kernel = &contextInternal.create<bud::cl::Kernel>(kernelInternal);
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -155,7 +155,7 @@ clCloneKernel(cl_kernel source_kernel,
         return kernel;
     } catch (const std::exception& e) {
         if (errcode_ret) {
-            if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+            if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
                 *errcode_ret = except->err();
             } else {
                 *errcode_ret = CL_OUT_OF_HOST_MEMORY;
@@ -173,10 +173,10 @@ clGetKernelInfo(cl_kernel kernel,
                 size_t* param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
     try {
         if (!kernel || !kernel->isValid()) {
-            throw qp::cl::Except(CL_INVALID_KERNEL);
+            throw bud::cl::Except(CL_INVALID_KERNEL);
         }
 
-        auto& kernelInternal = static_cast<qp::cl::Kernel&>(*kernel);
+        auto& kernelInternal = static_cast<bud::cl::Kernel&>(*kernel);
 
         if (param_value) {
             kernelInternal.getInfo(param_name, param_value_size, param_value);
@@ -185,7 +185,7 @@ clGetKernelInfo(cl_kernel kernel,
             *param_value_size_ret = kernelInternal.getInfoSize(param_name);
         }
     } catch (const std::exception& e) {
-        if (auto except = dynamic_cast<const qp::cl::Except*>(&e); except) {
+        if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
