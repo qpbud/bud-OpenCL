@@ -13,7 +13,7 @@ public:
     std::unique_ptr<hal::Image> createImage() override;
     std::unique_ptr<hal::Pipe> createPipe() override;
     std::unique_ptr<hal::Sampler> createSampler() override;
-    std::unique_ptr<hal::Program> createProgram() override;
+    std::unique_ptr<hal::Program> createProgram(hal::Program::SourceVariant&& sourceVariant) override;
     std::unique_ptr<hal::Kernel> createKernel() override;
 };
 

@@ -39,8 +39,8 @@ std::unique_ptr<hal::Sampler> Context::createSampler() {
     return std::make_unique<Sampler>();
 }
 
-std::unique_ptr<hal::Program> Context::createProgram() {
-    return std::make_unique<Program>();
+std::unique_ptr<hal::Program> Context::createProgram(hal::Program::SourceVariant&& sourceVariant) {
+    return std::make_unique<Program>(std::move(sourceVariant));
 }
 
 std::unique_ptr<hal::Kernel> Context::createKernel() {

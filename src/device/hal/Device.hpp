@@ -41,8 +41,8 @@ class Device {
     std::unique_ptr<Sampler> createSampler(Context& context) {
         return context.createSampler();
     }
-    std::unique_ptr<Program> createProgram(Context& context) {
-        return context.createProgram();
+    std::unique_ptr<Program> createProgram(Context& context, Program::SourceVariant&& sourceVariant) {
+        return context.createProgram(std::move(sourceVariant));
     }
     std::unique_ptr<Kernel> createKernel(Context& context) {
         return context.createKernel();

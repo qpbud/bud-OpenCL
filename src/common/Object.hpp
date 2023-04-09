@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <concepts>
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 #include "common/Khronos.hpp"
 #include "common/Icd.hpp"
@@ -48,21 +49,24 @@ struct _cl_kernel: public bud::cl::ObjectBase<bud::cl::ObjectMagic::kernel> {};
 
 namespace bud::cl {
 
-template<typename T, typename Enable = void> class Object {};
+template<typename T>
+concept UnrefObject = std::same_as<T, _cl_platform_id> ||
+                      std::same_as<T, _cl_device_id>;
 
 template<typename T>
-class Object<T,
-             std::enable_if_t<std::is_same_v<T, _cl_platform_id> ||
-                              std::is_same_v<T, _cl_device_id>>> : public T {};
+concept RefObject = std::same_as<T, _cl_context> ||
+                    std::same_as<T, _cl_command_queue> ||
+                    std::same_as<T, _cl_mem> ||
+                    std::same_as<T, _cl_event> ||
+                    std::same_as<T, _cl_sampler> ||
+                    std::same_as<T, _cl_program> ||
+                    std::same_as<T, _cl_kernel>;
 
-template<typename T>
-class Object<T, std::enable_if_t<std::is_same_v<T, _cl_context> ||
-                                 std::is_same_v<T, _cl_command_queue> ||
-                                 std::is_same_v<T, _cl_mem> ||
-                                 std::is_same_v<T, _cl_event> ||
-                                 std::is_same_v<T, _cl_sampler> ||
-                                 std::is_same_v<T, _cl_program> ||
-                                 std::is_same_v<T, _cl_kernel>>> : public T, public boost::intrusive_ref_counter<Object<T>> {
+template<typename T> class Object;
+
+template<UnrefObject T> class Object<T> : public T {};
+
+template<RefObject T> class Object<T> : public T, public boost::intrusive_ref_counter<Object<T>> {
 public:
     Object()
         : T()

@@ -14,13 +14,13 @@
 namespace bud::cl {
 
 class Program : public Object<_cl_program>, public Scope, public H1DN<hal::Program> {
-    std::vector<std::string> m_sources;
+    std::string m_source;
     std::vector<unsigned char> m_il;
     std::vector<cl_device_id> m_devices;
     std::vector<std::vector<unsigned char>> m_binaries;
     std::stack<std::function<void()>> m_releaseCallbacks;
 public:
-    Program(Context& context, std::vector<std::string>&& sources);
+    Program(Context& context, std::string&& source);
     Program(Context& context, std::vector<unsigned char>&& il);
     Program(Context& context, std::vector<cl_device_id>&& devices, std::vector<std::vector<unsigned char>>&& binaries);
     ~Program();

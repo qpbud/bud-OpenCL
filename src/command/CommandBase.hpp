@@ -46,7 +46,7 @@ public:
         barrier,
     };
 
-    template<cl_command_type commandType, typename Enable = void> struct TypeMap {};
+    template<cl_command_type commandType> struct TypeMap;
 
     CommandBase(Type type);
     virtual ~CommandBase() = default;
@@ -58,8 +58,9 @@ template<CommandBase::Type type> class Command;
 
 #define COMMAND_TRAITS(command, t, v) \
     template<cl_command_type commandType> \
-    struct CommandBase::TypeMap<commandType, std::enable_if_t<commandType == command>> { \
-        using type = Command<Type::t>;; \
+    requires (commandType == command) \
+    struct CommandBase::TypeMap<commandType> { \
+        using type = Command<Type::t>; \
         static constexpr Category value = Category::v; \
     };
 

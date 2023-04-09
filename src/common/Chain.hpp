@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <type_traits>
 
 namespace bud::cl {
 
@@ -14,8 +15,8 @@ public:
     Chain(const std::function<Ret(Targs...)>& fn) : m_chain(fn) {}
     Chain(std::function<Ret(Targs...)>&& fn) : m_chain(std::move(fn)) {}
     template<typename Fn>
-    Chain<std::result_of_t<Fn(Ret)>(Targs...)> chain(Fn&& fn) {
-        return Chain<std::result_of_t<Fn(Ret)>(Targs...)>([m_chain = std::move(m_chain), fn = std::forward<Fn>(fn)](Targs&&... args) {
+    Chain<std::invoke_result_t<Fn, Ret>(Targs...)> chain(Fn&& fn) {
+        return Chain<std::invoke_result_t<Fn, Ret>(Targs...)>([m_chain = std::move(m_chain), fn = std::forward<Fn>(fn)](Targs&&... args) {
             return fn(m_chain(std::forward<Targs>(args)...));
         });
     }
