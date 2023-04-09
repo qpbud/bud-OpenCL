@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 set(PLATFORM_SOURCE platform/Entries.cpp
                     platform/Platform.cpp)
@@ -7,7 +7,8 @@ set(DEVICE_SOURCE device/Entries.cpp
 set(CPU_BACKEND_SOURCE device/backend/cpu/Buffer.cpp
                        device/backend/cpu/Command.cpp
                        device/backend/cpu/Device.cpp
-                       device/backend/cpu/Context.cpp)
+                       device/backend/cpu/Context.cpp
+                       device/backend/cpu/Program.cpp)
 set(VULKAN_BACKEND_SOURCE device/backend/vulkan/Device.cpp
                           device/backend/vulkan/Context.cpp)
 set(CONTEXT_SOURCE context/Entries.cpp

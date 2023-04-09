@@ -24,7 +24,7 @@ public:
     virtual std::unique_ptr<Image> createImage() = 0;
     virtual std::unique_ptr<Pipe> createPipe() = 0;
     virtual std::unique_ptr<Sampler> createSampler() = 0;
-    virtual std::unique_ptr<Program> createProgram() = 0;
+    virtual std::unique_ptr<Program> createProgram(Program::SourceVariant&& sourceVariant) = 0;
     virtual std::unique_ptr<Kernel> createKernel() = 0;
 };
 

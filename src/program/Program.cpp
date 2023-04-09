@@ -3,17 +3,17 @@
 namespace bud::cl {
 
 Program::Program(Context& context,
-                 std::vector<std::string>&& sources)
+                 std::string&& source)
     : Object<_cl_program>()
     , Scope(context)
     , H1DN<hal::Program>()
-    , m_sources(std::move(sources))
+    , m_source(std::move(source))
     , m_il()
     , m_devices()
     , m_binaries()
     , m_releaseCallbacks() {
     for (cl_uint i = 0; i < context.getDeviceCount(); i++) {
-        append(context.getDevice(i), context[context.getDevice(i)]);
+        append(context.getDevice(i), context[context.getDevice(i)], hal::Program::setSource(m_source));
     }
 }
 
@@ -22,20 +22,13 @@ Program::Program(Context& context,
     : Object<_cl_program>()
     , Scope(context)
     , H1DN<hal::Program>()
-    , m_sources()
+    , m_source()
     , m_il(std::move(il))
     , m_devices()
     , m_binaries()
     , m_releaseCallbacks() {
     for (cl_uint i = 0; i < context.getDeviceCount(); i++) {
-        append(context.getDevice(i), context[context.getDevice(i)]);
-    }
-}
-
-Program::~Program() {
-    while (!m_releaseCallbacks.empty()) {
-        m_releaseCallbacks.top()();
-        m_releaseCallbacks.pop();
+        append(context.getDevice(i), context[context.getDevice(i)], hal::Program::setIL({il.begin(), il.end()}));
     }
 }
 
@@ -45,14 +38,21 @@ Program::Program(Context& context,
     : Object<_cl_program>()
     , Scope(context)
     , H1DN<hal::Program>()
-    , m_sources()
+    , m_source()
     , m_il()
     , m_devices(std::move(devices))
     , m_binaries(std::move(binaries))
     , m_releaseCallbacks() {
-    for (auto device : m_devices) {
-        auto& deviceInternal = static_cast<Device&>(*device);
-        append(deviceInternal, context[deviceInternal]);
+    for (size_t i = 0; i < m_devices.size(); i++) {
+        auto& deviceInternal = static_cast<Device&>(*m_devices[i]);
+        append(deviceInternal, context[deviceInternal], hal::Program::setBinary({m_binaries[i].begin(), m_binaries[i].end()}));
+    }
+}
+
+Program::~Program() {
+    while (!m_releaseCallbacks.empty()) {
+        m_releaseCallbacks.top()();
+        m_releaseCallbacks.pop();
     }
 }
 

@@ -22,20 +22,20 @@ clCreateProgramWithSource(cl_context context,
             throw bud::cl::Except(CL_INVALID_VALUE);
         }
 
-        std::vector<std::string> sources;
+        std::string source;
         for (cl_uint i = 0; i < count; i++) {
             if (!strings[i]) {
                 throw bud::cl::Except(CL_INVALID_VALUE);
             }
             if (lengths && lengths[i] != 0) {
-                sources.emplace_back(strings[i], lengths[i]);
+                source.append(strings[i], lengths[i]);
             } else {
-                sources.emplace_back(strings[i]);
+                source.append(strings[i], std::strlen(strings[i]));
             }
         }
 
         auto& contextInternal = static_cast<bud::cl::Context&>(*context);
-        cl_program program = &contextInternal.create<bud::cl::Program>(std::move(sources));
+        cl_program program = &contextInternal.create<bud::cl::Program>(std::move(source));
 
         if (errcode_ret) {
             *errcode_ret = CL_SUCCESS;
@@ -165,14 +165,13 @@ clRetainProgram(cl_program program) CL_API_SUFFIX__VERSION_1_0 {
 
         auto& programInternal = static_cast<bud::cl::Program&>(*program);
         programInternal.retain();
+        return CL_SUCCESS;
     } catch (const std::exception& e) {
         if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
     }
-
-    return CL_SUCCESS;
 }
 
 CL_API_ENTRY cl_int CL_API_CALL
@@ -184,14 +183,13 @@ clReleaseProgram(cl_program program) CL_API_SUFFIX__VERSION_1_0 {
 
         auto& programInternal = static_cast<bud::cl::Program&>(*program);
         programInternal.release();
+        return CL_SUCCESS;
     } catch (const std::exception& e) {
         if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
     }
-
-    return CL_SUCCESS;
 }
 
 CL_API_ENTRY CL_API_PREFIX__VERSION_2_2_DEPRECATED cl_int CL_API_CALL
@@ -210,14 +208,13 @@ clSetProgramReleaseCallback(cl_program program,
 
         auto& programInternal = static_cast<bud::cl::Program&>(*program);
         programInternal.setReleaseCallback([pfn_notify, program, user_data] { pfn_notify(program, user_data); });
+        return CL_SUCCESS;
     } catch (const std::exception& e) {
         if (auto except = dynamic_cast<const bud::cl::Except*>(&e); except) {
             return except->err();
         }
         return CL_OUT_OF_HOST_MEMORY;
     }
-
-    return CL_SUCCESS;
 }
 
 CL_API_ENTRY cl_int CL_API_CALL
